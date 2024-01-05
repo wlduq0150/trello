@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumnOptions, ManyToOne, OneToMany, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, JoinColumn } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, Relation } from "typeorm";
 
 
 // import { Board } from "./board.entity"
@@ -23,13 +23,13 @@ export class Columns {
     @DeleteDateColumn()
     deletedAt?: Date;
 
-    // @OneToMany(()=> CreateDateColumn, (card) => card.columns)
-    // cards: Card[]
+    // @OneToMany(()=> Card, (card) => card.columns)
+    // cards: Relation<Card>[];
 
-    // @ManyToOne(() => Board, (board) => board.columns)
-    // @JoinColumn({ name: 'board_id'})
-    // board: Board;
+    // @ManyToOne(() => Board, (board) => board.columns, {
+    //     nullable: false,
+    //     onDelete: "CASCADE",
+    // })
+    // board: Relation<Board>;
 
-    // @Column({name: 'board_id'})
-    // board_id: number
 }
