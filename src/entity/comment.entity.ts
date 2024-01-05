@@ -19,8 +19,11 @@ export class Comment {
     @Column()
     content: string;
 
-    // @ManyToOne(() => User, (user) => user.comments, { eager: true })
-    // author: Relation<User>;
+    // // @ManyToOne(() => User, (user) => user.comments, {
+    //     eager: true,
+    //     nullable: false,
+    // })
+    // user: Relation<User>;
 
     @CreateDateColumn()
     createdAt: Date;
@@ -28,6 +31,6 @@ export class Comment {
     @UpdateDateColumn()
     updatedAt: Date;
 
-    // @ManyToOne(() => Card, (card) => card.comments)
+    // @ManyToOne(() => Card, (card) => card.comments, {nullable: true})
     // card: Relation<Card>;
 }
