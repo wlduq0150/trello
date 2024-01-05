@@ -2,9 +2,12 @@ import {
     Column,
     CreateDateColumn,
     Entity,
+    ManyToMany,
     PrimaryGeneratedColumn,
+    Relation,
     UpdateDateColumn,
 } from "typeorm";
+import { Board } from "./board.entity";
 
 @Entity({
     name: "users", // 데이터베이스 테이블의 이름
@@ -30,4 +33,7 @@ export class User {
 
     @UpdateDateColumn()
     updatedAt: Date;
+
+    // @ManyToMany(() => Board, board => board.users)
+    // boards: Relation<Board>[];
 }
