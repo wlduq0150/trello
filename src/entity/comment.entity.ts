@@ -25,5 +25,5 @@ export class Comment {
     createdAt: Date;
 
     // @ManyToOne(() => Card, (card) => card.comments)
-    // card: Card;
+    // card: Relation<Card>;
 }
