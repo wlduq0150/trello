@@ -8,6 +8,7 @@ import {
     Relation,
     UpdateDateColumn,
 } from "typeorm";
+import { Comment } from "./comment.entity";
 import { Board } from "./board.entity";
 import { Card } from "./card.entity";
 
@@ -36,6 +37,9 @@ export class User {
     @UpdateDateColumn()
     updatedAt: Date;
 
+    // @OneToMany(() => Comment, (comment) => comment.author)
+    // comments: Relation<Comment>[];
+  
     // @ManyToMany(() => Board, board => board.users)
     // boards: Relation<Board>[];
 
