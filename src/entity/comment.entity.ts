@@ -18,8 +18,8 @@ export class Comment {
     @Column()
     content: string;
 
-    @ManyToOne(() => User, (user) => user.comments, { eager: true })
-    author: Relation<User>;
+    // @ManyToOne(() => User, (user) => user.comments, { eager: true })
+    // author: Relation<User>;
 
     @CreateDateColumn()
     createdAt: Date;

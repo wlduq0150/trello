@@ -34,6 +34,6 @@ export class User {
     @UpdateDateColumn()
     updatedAt: Date;
 
-    @OneToMany(() => Comment, (comment) => comment.author)
-    comments: Relation<Comment>[];
+    // @OneToMany(() => Comment, (comment) => comment.author)
+    // comments: Relation<Comment>[];
 }
