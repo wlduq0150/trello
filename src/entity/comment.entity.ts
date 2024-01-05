@@ -5,6 +5,7 @@ import {
     ManyToOne,
     PrimaryGeneratedColumn,
     Relation,
+    UpdateDateColumn,
 } from "typeorm";
 import { User } from "./user.entity";
 
@@ -23,6 +24,9 @@ export class Comment {
 
     @CreateDateColumn()
     createdAt: Date;
+
+    @UpdateDateColumn()
+    updatedAt: Date;
 
     // @ManyToOne(() => Card, (card) => card.comments)
     // card: Relation<Card>;
