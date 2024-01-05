@@ -2,11 +2,13 @@ import {
     Column,
     CreateDateColumn,
     Entity,
+    ManyToMany,
     OneToMany,
     PrimaryGeneratedColumn,
     Relation,
     UpdateDateColumn,
 } from "typeorm";
+import { Board } from "./board.entity";
 import { Card } from "./card.entity";
 
 @Entity({
@@ -33,6 +35,9 @@ export class User {
 
     @UpdateDateColumn()
     updatedAt: Date;
+
+    // @ManyToMany(() => Board, board => board.users)
+    // boards: Relation<Board>[];
 
     @OneToMany(() => Card, (card) => card.user)
     cards: Relation<Card>[];
