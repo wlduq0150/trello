@@ -8,6 +8,7 @@ import {
     UpdateDateColumn,
 } from "typeorm";
 import { User } from "./user.entity";
+import { Card } from "./card.entity";
 
 @Entity({
     name: "comments",
@@ -19,11 +20,11 @@ export class Comment {
     @Column()
     content: string;
 
-    // // @ManyToOne(() => User, (user) => user.comments, {
-    //     eager: true,
-    //     nullable: false,
-    // })
-    // user: Relation<User>;
+    @ManyToOne(() => User, (user) => user.comments, {
+        eager: true,
+        nullable: false,
+    })
+    user: Relation<User>;
 
     @CreateDateColumn()
     createdAt: Date;
@@ -31,6 +32,9 @@ export class Comment {
     @UpdateDateColumn()
     updatedAt: Date;
 
-    // @ManyToOne(() => Card, (card) => card.comments, {nullable: false})
-    // card: Relation<Card>;
+    @ManyToOne(() => Card, (card) => card.comments, {
+        eager: true,
+        nullable: false,
+    })
+    card: Relation<Card>;
 }

@@ -37,11 +37,11 @@ export class User {
     @UpdateDateColumn()
     updatedAt: Date;
 
-    // @OneToMany(() => Comment, (comment) => comment.author)
-    // comments: Relation<Comment>[];
-  
-    // @ManyToMany(() => Board, board => board.users)
-    // boards: Relation<Board>[];
+    @OneToMany(() => Comment, (comment) => comment.user)
+    comments: Relation<Comment>[];
+
+    @ManyToMany(() => Board, (board) => board.users)
+    boards: Relation<Board>[];
 
     @OneToMany(() => Card, (card) => card.user)
     cards: Relation<Card>[];
