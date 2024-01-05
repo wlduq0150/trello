@@ -1,6 +1,7 @@
 import { DynamicModule, Module } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
+import { Card } from "src/entity/card.entity";
 import { User } from "src/entity/user.entity";
 
 @Module({})
@@ -14,7 +15,7 @@ export class TypeormModule {
                 username: configService.get<string>("DATABASE_USERNAME"),
                 password: configService.get<string>("DATABASE_PASSWORD"),
                 database: configService.get<string>("DATABASE_NAME"),
-                entities: [User],
+                entities: [User, Card],
                 synchronize: true,
             }),
             inject: [ConfigService],
