@@ -31,6 +31,6 @@ export class Comment {
     @UpdateDateColumn()
     updatedAt: Date;
 
-    // @ManyToOne(() => Card, (card) => card.comments, {nullable: true})
+    // @ManyToOne(() => Card, (card) => card.comments, {nullable: false})
     // card: Relation<Card>;
 }
