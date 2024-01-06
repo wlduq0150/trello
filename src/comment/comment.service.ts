@@ -14,7 +14,9 @@ export class CommentService {
         @InjectRepository(Comment)
         private commentRepository: Repository<Comment>,
         @InjectRepository(Card)
-        private cardRepository: Repository<Card>
+        private cardRepository: Repository<Card>,
+        @InjectRepository(User)
+        private readonly userRepository: Repository<User>,
     ) {}
 // 댓글 기능 조회 (카드 id로 불러오기위해서 entitiy 수정 확인)
     async commentfind(cardid: number) {
@@ -78,7 +80,14 @@ export class CommentService {
         } else {
             throw new BadRequestException('해당 댓글을 찾을 수 없습니다.');
         }
+    }
 
+    async checkComment(user: User) {
+        const test = await this.findUser(Number(user));
+        console.log(test);
+    }
 
+    async findUser(userid: number){
+        return await this.userRepository.findOne({where:{id: userid}})
     }
 }

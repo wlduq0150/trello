@@ -44,4 +44,11 @@ export class CommentController {
     async commentDelete(@Param('cardid') cardid: number, @Param('commentid') commentid: number, @UserId() user:User) {
         return await this.commentService.commentDelete(user, cardid, commentid);
     }
+
+    @ApiBearerAuth("accessToken")
+    @UseGuards(accessTokenGuard)
+    @Post("check")
+    async checkComment(@UserId() user: User){
+        return await this.commentService.checkComment(user);
+    }
 }
