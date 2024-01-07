@@ -33,9 +33,9 @@ export class Board {
     @UpdateDateColumn()
     updatedAt: Date;
 
-    @ManyToMany(() => User, user => user.boards)
+    @ManyToMany(() => User, (user) => user.boards)
     users: Relation<User>[];
 
-    @OneToMany(() => Columns, column => column.board)
-    columns: Relation<Columns>[]
+    @OneToMany(() => Columns, (column) => column.board)
+    columns: Relation<Columns>[];
 }
