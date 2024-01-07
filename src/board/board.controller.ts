@@ -13,6 +13,7 @@ import { BoardService } from "./board.service";
 import { ApiBearerAuth } from "@nestjs/swagger";
 import { accessTokenGuard } from "src/auth/guard/access-token.guard";
 import { UpdateBoardDto } from "./dto/uptadeBoard.dto";
+import { UserId } from "src/auth/decorators/userId.decorator";
 
 @Controller("boards")
 export class BoardController {
@@ -21,13 +22,15 @@ export class BoardController {
     @ApiBearerAuth("accessToken")
     @UseGuards(accessTokenGuard)
     @Post()
-    createBoard(@Body() createBoardDto: CreateBoardDto) {
-        return this.boardService.createBoard(createBoardDto);
+    createBoard(@Body() createBoardDto: CreateBoardDto, @UserId() userId: number) {
+        return this.boardService.createBoard(createBoardDto,userId);
     }
 
+    @ApiBearerAuth("accessToken")
+    @UseGuards(accessTokenGuard)
     @Get("/:id")
-    getBoard(@Param("id") id: number) {
-        return this.boardService.getBoard(id);
+    readBoard(@Param("id") id: number) {
+        return this.boardService.readBoard(+id);
     }
 
     @ApiBearerAuth("accessToken")
