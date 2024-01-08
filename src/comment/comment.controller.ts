@@ -13,7 +13,7 @@ import { ApiBearerAuth } from "@nestjs/swagger";
 import { SwCreateDto } from "./dto/swcreate-comment.dto";
 import { SwUpdateDto } from "./dto/swupdate-comment.dto";
 
-@Controller("comment")
+@Controller("comments")
 export class CommentController {
     constructor(private readonly commentService: CommentService) {}
 
@@ -37,16 +37,14 @@ export class CommentController {
 
     @ApiBearerAuth("accessToken")
     @UseGuards(accessTokenGuard)
-    @Patch("cards/:cardid/comments/:commentid")
+    @Patch("/:commentid")
     async commentUpdate(
         @Body() updateCommentDto: SwUpdateDto,
-        @Param("cardid") cardid: number,
         @Param("commentid") commentid: number,
         @UserId() userid: number,
     ) {
         return await this.commentService.commentUpdate(
             userid,
-            cardid,
             commentid,
             updateCommentDto,
         );
@@ -54,17 +52,12 @@ export class CommentController {
 
     @ApiBearerAuth("accessToken")
     @UseGuards(accessTokenGuard)
-    @Delete("cards/:cardid/comments/:commentid")
+    @Delete("/:commentid")
     async commentDelete(
-        @Param("cardid") cardid: number,
         @Param("commentid") commentid: number,
         @UserId() userid: number,
     ) {
-        return await this.commentService.commentDelete(
-            userid,
-            cardid,
-            commentid,
-        );
+        return await this.commentService.commentDelete(userid, commentid);
     }
 
     @ApiBearerAuth("accessToken")
