@@ -27,7 +27,7 @@ export class ColumnService {
             .createQueryBuilder("column")
             .leftJoinAndSelect("column.cards", "cards")
             .where("column.id = :id", { id })
-            .select(["column.title", "cards.name"])
+            .select(["column.title", "cards.name", "cards.id"])
             .getOne();
 
         if (!columns) {

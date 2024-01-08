@@ -56,7 +56,7 @@ export class CommentService {
 
         const user = await this.userSerivce.findUserById(userid);
 
-        console.log(createCommentDto.comment, existCard, user);
+        // console.log(createCommentDto.comment, existCard, user);
 
         if (!existCard) {
             throw new BadRequestException("카드를 확인해주세요");
@@ -83,7 +83,11 @@ export class CommentService {
             relations: { user: true },
         });
 
+        console.log(comment.user.id);
+        console.log("-------------");
+
         const user = await this.userSerivce.findUserById(userid);
+        console.log(user.id);
 
         if (comment.user.id !== user.id) {
             throw new BadRequestException("작성자를 확인해주세요.");
@@ -99,7 +103,9 @@ export class CommentService {
     }
 
     //댓글 삭제
+
     async commentDelete(userid: number, commentid: number) {
+
         const comment = await this.commentRepository.findOne({
             where: { id: commentid },
             relations: { user: true },
@@ -126,7 +132,15 @@ export class CommentService {
     // async findUser(userid: number) {
     //     return await this.userRepository.findOne({
     //         where: { id: userid },
-    //         select: ["id", "email", "name"],
+    //         select: [
+    //             "id",
+    //             "email",
+    //             "password",
+    //             "currentRefreshToken",
+    //             "name",
+    //             "createdAt",
+    //             "updatedAt",
+    //         ],
     //     });
     // }
 }
