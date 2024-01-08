@@ -25,6 +25,7 @@ export class CommentService {
     async commentfind(cardid: number) {
         const card = await this.cardRepository.findOne({
             where: { id: cardid },
+            select: ["id"],
         });
         const comment = await this.commentRepository.find({
             where: { card: card },
@@ -45,7 +46,7 @@ export class CommentService {
 
         const user = await this.userSerivce.findUserById(userid);
 
-        console.log(createCommentDto.comment, existCard, user);
+        // console.log(createCommentDto.comment, existCard, user);
 
         if (!existCard) {
             throw new BadRequestException("카드를 확인해주세요");
@@ -70,15 +71,20 @@ export class CommentService {
     ) {
         const card = await this.cardRepository.findOne({
             where: { id: cardid },
+            select: ["id"],
         });
         const comment = await this.commentRepository.findOne({
             where: { id: commentid, card: card },
             relations: { user: true },
         });
 
-        const user = await this.userSerivce.findUserById(userid);
+        console.log(comment.user.id);
+        console.log("-------------");
 
-        if (comment.user !== user) {
+        const user = await this.userSerivce.findUserById(userid);
+        console.log(user.id);
+
+        if (comment.user.id !== user.id) {
             throw new BadRequestException("작성자를 확인해주세요.");
         }
 
@@ -95,6 +101,7 @@ export class CommentService {
     async commentDelete(userid: number, cardid: number, commentid: number) {
         const card = await this.cardRepository.findOne({
             where: { id: cardid },
+            select: ["id"],
         });
         const comment = await this.commentRepository.findOne({
             where: { id: commentid, card: card },
@@ -103,7 +110,7 @@ export class CommentService {
 
         const user = await this.userSerivce.findUserById(userid);
 
-        if (comment.user !== user) {
+        if (comment.user.id !== user.id) {
             throw new BadRequestException("작성한 사용자만 삭제 가능합니다.");
         }
 
@@ -122,7 +129,15 @@ export class CommentService {
     // async findUser(userid: number) {
     //     return await this.userRepository.findOne({
     //         where: { id: userid },
-    //         select: ["id", "email", "name"],
+    //         select: [
+    //             "id",
+    //             "email",
+    //             "password",
+    //             "currentRefreshToken",
+    //             "name",
+    //             "createdAt",
+    //             "updatedAt",
+    //         ],
     //     });
     // }
 }
