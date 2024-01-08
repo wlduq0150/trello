@@ -2,6 +2,7 @@ import {
     Column,
     CreateDateColumn,
     Entity,
+    JoinTable,
     ManyToMany,
     OneToMany,
     PrimaryGeneratedColumn,
@@ -34,6 +35,7 @@ export class Board {
     updatedAt: Date;
 
     @ManyToMany(() => User, (user) => user.boards)
+    @JoinTable()
     users: Relation<User>[];
 
     @OneToMany(() => Columns, (column) => column.board)

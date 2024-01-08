@@ -33,10 +33,10 @@ async function bootstrap() {
     };
 
     const config = new DocumentBuilder()
-        .setTitle("Webtoon Recommend")
-        .setDescription("Webtoon Recommend API description")
+        .setTitle("Trello")
+        .setDescription("Trello API description")
         .setVersion("1.0")
-        .addTag("webtoon")
+        .addTag("Trello")
         .addBearerAuth(
             { type: 'http', scheme: 'bearer', bearerFormat: 'Token' },
             'accessToken',

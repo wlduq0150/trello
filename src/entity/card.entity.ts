@@ -25,10 +25,10 @@ export class Card {
     @Column()
     content: string;
 
-    @Column()
+    @Column({ default: "카드 색상" })
     color: string;
 
-    @Column()
+    @Column({ nullable: true })
     deadline: Date;
 
     @CreateDateColumn()
