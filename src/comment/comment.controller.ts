@@ -20,35 +20,57 @@ export class CommentController {
     // @UseGuards(accessTokenGuard)
     // @ApiBearerAuth("accessToken")
     @Get("cards/:cardid/comments")
-    async commentfind(@Param('cardid') cardid: number) {
+    async commentfind(@Param("cardid") cardid: number) {
         return await this.commentService.commentfind(cardid);
     }
 
     @ApiBearerAuth("accessToken")
     @UseGuards(accessTokenGuard)
     @Post("cards/:cardid/comments")
-    async comment(@Body() createComment: SwCreateDto, @Param('cardid') cardid: number, @UserId() user: User) {
-        return await this.commentService.comment(createComment, user, cardid)
+    async comment(
+        @Body() createComment: SwCreateDto,
+        @Param("cardid") cardid: number,
+        @UserId() userid: number,
+    ) {
+        return await this.commentService.comment(createComment, userid, cardid);
     }
 
     @ApiBearerAuth("accessToken")
     @UseGuards(accessTokenGuard)
     @Patch("cards/:cardid/comments/:commentid")
-    async commentUpdate(@Body() updateCommentDto: SwUpdateDto, @Param('cardid') cardid: number, @Param('commentid') commentid: number, @UserId() user:User) {
-        return await this.commentService.commentUpdate(user, cardid, commentid, updateCommentDto);
+    async commentUpdate(
+        @Body() updateCommentDto: SwUpdateDto,
+        @Param("cardid") cardid: number,
+        @Param("commentid") commentid: number,
+        @UserId() userid: number,
+    ) {
+        return await this.commentService.commentUpdate(
+            userid,
+            cardid,
+            commentid,
+            updateCommentDto,
+        );
     }
 
     @ApiBearerAuth("accessToken")
     @UseGuards(accessTokenGuard)
-    @Delete('cards/:cardid/comments/:commentid')
-    async commentDelete(@Param('cardid') cardid: number, @Param('commentid') commentid: number, @UserId() user:User) {
-        return await this.commentService.commentDelete(user, cardid, commentid);
+    @Delete("cards/:cardid/comments/:commentid")
+    async commentDelete(
+        @Param("cardid") cardid: number,
+        @Param("commentid") commentid: number,
+        @UserId() userid: number,
+    ) {
+        return await this.commentService.commentDelete(
+            userid,
+            cardid,
+            commentid,
+        );
     }
 
     @ApiBearerAuth("accessToken")
     @UseGuards(accessTokenGuard)
     @Post("check")
-    async checkComment(@UserId() user: User){
-        return await this.commentService.checkComment(user);
+    async checkComment(@UserId() userid: number) {
+        return await this.commentService.checkComment(userid);
     }
 }

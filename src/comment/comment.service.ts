@@ -7,6 +7,7 @@ import { Repository } from "typeorm";
 import { CreateCommentDto } from "./dto/create-comment.dto";
 import { User } from "src/entity/user.entity";
 import { UpdateCommentDto } from "./dto/update-comment.dto";
+import { UserService } from "src/user/user.service";
 
 @Injectable()
 export class CommentService {
@@ -17,6 +18,7 @@ export class CommentService {
         private cardRepository: Repository<Card>,
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
+        private readonly userSerivce: UserService,
     ) {}
 
     // 댓글 기능 조회
@@ -34,14 +36,16 @@ export class CommentService {
     // 댓글 작성
     async comment(
         createCommentDto: CreateCommentDto,
-        user: User,
+        userid: number,
         cardid: number,
     ) {
         const existCard = await this.cardRepository.findOne({
             where: { id: cardid },
         });
 
-        // console.log(createCommentDto.comment, existCard, user);
+        const user = await this.userSerivce.findUserById(userid);
+
+        console.log(createCommentDto.comment, existCard, user);
 
         if (!existCard) {
             throw new BadRequestException("카드를 확인해주세요");
@@ -59,7 +63,7 @@ export class CommentService {
 
     // 댓글 수정(유저 확인)
     async commentUpdate(
-        user: User,
+        userid: number,
         cardid: number,
         commentid: number,
         updateCommentDto: UpdateCommentDto,
@@ -69,7 +73,10 @@ export class CommentService {
         });
         const comment = await this.commentRepository.findOne({
             where: { id: commentid, card: card },
+            relations: { user: true },
         });
+
+        const user = await this.userSerivce.findUserById(userid);
 
         if (comment.user !== user) {
             throw new BadRequestException("작성자를 확인해주세요.");
@@ -85,13 +92,16 @@ export class CommentService {
     }
 
     //댓글 삭제
-    async commentDelete(user: User, cardid: number, commentid: number) {
+    async commentDelete(userid: number, cardid: number, commentid: number) {
         const card = await this.cardRepository.findOne({
             where: { id: cardid },
         });
         const comment = await this.commentRepository.findOne({
             where: { id: commentid, card: card },
+            relations: { user: true },
         });
+
+        const user = await this.userSerivce.findUserById(userid);
 
         if (comment.user !== user) {
             throw new BadRequestException("작성한 사용자만 삭제 가능합니다.");
@@ -104,14 +114,15 @@ export class CommentService {
         }
     }
 
-    async checkComment(user: User) {
-        const test = await this.findUser(Number(user));
+    async checkComment(userid: number) {
+        const test = await this.userSerivce.findUserById(userid);
         console.log(test);
-
-        console.log(user);
     }
 
-    async findUser(userid: number) {
-        return await this.userRepository.findOne({ where: { id: userid } });
-    }
+    // async findUser(userid: number) {
+    //     return await this.userRepository.findOne({
+    //         where: { id: userid },
+    //         select: ["id", "email", "name"],
+    //     });
+    // }
 }
