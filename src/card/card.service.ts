@@ -8,6 +8,7 @@ import { Columns } from "src/entity/column.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ChangeColumnCardDto } from "./dto/change-column-card.dto";
 import { ChangeUserCardDto } from "./dto/change-user-card.dto";
+import { SseService } from "src/sse/sse.service";
 
 @Injectable()
 export class CardService {
@@ -17,6 +18,7 @@ export class CardService {
         @InjectRepository(Columns)
         private readonly columnRepository: Repository<Columns>,
         private readonly userSerivce: UserService,
+        private readonly sseService: SseService,
     ) {}
 
     async create(userId: number, createCardDto: CreateCardDto) {
@@ -120,6 +122,8 @@ export class CardService {
                 user,
             },
         );
+
+        this.sseService.emitCardChangeEvent(user.id);
 
         return {
             message: `${id}번 카드의 담당자를 ${userId}번 사용자로 변경했습니다.`,
