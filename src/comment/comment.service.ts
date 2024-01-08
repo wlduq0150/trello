@@ -25,10 +25,21 @@ export class CommentService {
     async commentfind(cardid: number) {
         const card = await this.cardRepository.findOne({
             where: { id: cardid },
+            select: ["id"],
         });
         const comment = await this.commentRepository.find({
             where: { card: card },
         });
+
+        if (!card) {
+            throw new BadRequestException("카드 상태를 확인해주세요");
+        }
+
+        // if (!comment) {
+        //     throw new BadRequestException("댓글이 존재하지 않습니다.");
+        // }
+
+        console.log(comment);
 
         return comment;
     }
@@ -64,21 +75,17 @@ export class CommentService {
     // 댓글 수정(유저 확인)
     async commentUpdate(
         userid: number,
-        cardid: number,
         commentid: number,
         updateCommentDto: UpdateCommentDto,
     ) {
-        const card = await this.cardRepository.findOne({
-            where: { id: cardid },
-        });
         const comment = await this.commentRepository.findOne({
-            where: { id: commentid, card: card },
+            where: { id: commentid },
             relations: { user: true },
         });
 
         const user = await this.userSerivce.findUserById(userid);
 
-        if (comment.user !== user) {
+        if (comment.user.id !== user.id) {
             throw new BadRequestException("작성자를 확인해주세요.");
         }
 
@@ -92,18 +99,15 @@ export class CommentService {
     }
 
     //댓글 삭제
-    async commentDelete(userid: number, cardid: number, commentid: number) {
-        const card = await this.cardRepository.findOne({
-            where: { id: cardid },
-        });
+    async commentDelete(userid: number, commentid: number) {
         const comment = await this.commentRepository.findOne({
-            where: { id: commentid, card: card },
+            where: { id: commentid },
             relations: { user: true },
         });
 
         const user = await this.userSerivce.findUserById(userid);
 
-        if (comment.user !== user) {
+        if (comment.user.id !== user.id) {
             throw new BadRequestException("작성한 사용자만 삭제 가능합니다.");
         }
 
