@@ -27,7 +27,6 @@ export class InvitedUsersController {
     }
 
     @ApiBearerAuth("accessToken")
-    @UseGuards(accessTokenGuard)
     @Post()
     async verifyEmail(
         @Query("token") token: string

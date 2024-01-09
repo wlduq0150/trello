@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { CreateBoardDto } from "./dto/createBoard.dto";
@@ -30,6 +30,22 @@ export class BoardService {
         });
     }
 
+    async readMyBoards(id: number) {
+        const myBoards = await this.boardRepository
+            .createQueryBuilder("board")
+            .leftJoinAndSelect("board.users", "user")
+            .where("user.id= :id", { id })
+            .getMany();
+    
+        if (!myBoards) {
+            throw new NotFoundException(
+                "사용자가 속한 보드가 존재하지 않습니다.",
+            );
+        }
+    
+        return myBoards;
+    }
+
     async updateBoard(id: number, updateBoardDto: UpdateBoardDto) {
         const board = await this.boardRepository.findOne({
             where: { id },
@@ -47,15 +63,25 @@ export class BoardService {
         return board;
     }
 
-    async deleteBoard(id: number) {
-        const board = await this.boardRepository.findOne({ where: { id } });
+    async deleteBoard(boardId: number, userId: number) {
+        const board = await this.boardRepository.findOne({ where: { id:boardId } });
         console.log("board", board);
         if (!board) {
             throw new NotFoundException("보드가 존재하지 않습니다.");
         }
-        await this.boardRepository.delete({ id });
+        const user = await this.userService.findUserById(board.creator);
+        console.log('user', user)
+        const creator = await this.userService.findUserById(board.creator);
+        console.log('creator', creator)
+    
+        if (creator.id !== user.id) {
+            throw new UnauthorizedException("삭제할 권한이 없습니다.");
+        }
+    
+        await this.boardRepository.delete({ id:boardId });
         return {
             message: "보드가 성공적으로 삭제되었습니다.",
         };
     }
+    
 }

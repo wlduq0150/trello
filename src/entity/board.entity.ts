@@ -29,6 +29,9 @@ export class Board {
     @Column()
     description: string;
 
+    @Column()
+    creator: number;
+
     @CreateDateColumn()
     createdAt: Date;
 
