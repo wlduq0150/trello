@@ -8,6 +8,8 @@ import { Columns } from "src/entity/column.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ChangeColumnCardDto } from "./dto/change-column-card.dto";
 import { ChangeUserCardDto } from "./dto/change-user-card.dto";
+import { CardMoveDto } from "./dto/move-card.dto";
+import { LexoRank } from "lexorank";
 
 @Injectable()
 export class CardService {
@@ -124,5 +126,32 @@ export class CardService {
         return {
             message: `${id}번 카드의 담당자를 ${userId}번 사용자로 변경했습니다.`,
         };
+    }
+
+    async cardMove(cardId: number, { columnId, prevId, nextId }: CardMoveDto) {
+        const card = await this.findCardById(cardId);
+
+        let prevCard: Card = null;
+        let nextCard: Card = null;
+
+        if (prevId) prevCard = await this.findCardById(prevId);
+        if (nextId) nextCard = await this.findCardById(nextId);
+
+        let newLexo: LexoRank;
+
+        if (!prevCard) {
+            newLexo = LexoRank.parse(nextCard.lexo).genPrev();
+        } else if (!nextCard) {
+            newLexo = LexoRank.parse(prevCard.lexo).genNext();
+        } else {
+            newLexo = LexoRank.parse(prevCard.lexo).between(
+                LexoRank.parse(nextCard.lexo),
+            );
+        }
+
+        card.lexo = newLexo.toString();
+        await this.cardRepository.save(card);
+
+        return true;
     }
 }
