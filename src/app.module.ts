@@ -11,6 +11,7 @@ import { ColumnModule } from "./column/column.module";
 import { CardModule } from "./card/card.module";
 import { SseModule } from "./sse/sse.module";
 import { ScheduleModule } from "@nestjs/schedule";
+import { AlarmModule } from './alarm/alarm.module';
 
 @Module({
     imports: [
@@ -24,6 +25,7 @@ import { ScheduleModule } from "@nestjs/schedule";
         CardModule,
         SseModule,
         ScheduleModule.forRoot(),
+        AlarmModule,
     ],
     controllers: [AppController],
     providers: [AppService],
