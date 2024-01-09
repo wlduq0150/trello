@@ -11,6 +11,7 @@ import {
 } from "typeorm";
 import { User } from "./user.entity";
 import { Columns } from "./column.entity";
+import { InvitedUsers } from "./invited-users.entity";
 
 @Entity({
     name: "boards",
@@ -28,6 +29,9 @@ export class Board {
     @Column()
     description: string;
 
+    @Column()
+    creator: number;
+
     @CreateDateColumn()
     createdAt: Date;
 
@@ -35,8 +39,11 @@ export class Board {
     updatedAt: Date;
 
     @ManyToMany(() => User, (user) => user.boards)
-    @JoinTable()
+    @JoinTable({ name: "user_board" })
     users: Relation<User>[];
+
+    @OneToMany(() => InvitedUsers, (inviteduser) => inviteduser.board)
+    Invitedusers:Relation<InvitedUsers>
 
     @OneToMany(() => Columns, (column) => column.board)
     columns: Relation<Columns>[];
