@@ -11,6 +11,7 @@ import {
 } from "typeorm";
 import { User } from "./user.entity";
 import { Columns } from "./column.entity";
+import { InvitedUsers } from "./invited-users.entity";
 
 @Entity({
     name: "boards",
@@ -37,6 +38,9 @@ export class Board {
     @ManyToMany(() => User, (user) => user.boards)
     @JoinTable()
     users: Relation<User>[];
+
+    @OneToMany(() => InvitedUsers, (inviteduser) => inviteduser.board)
+    Invitedusers:Relation<InvitedUsers>
 
     @OneToMany(() => Columns, (column) => column.board)
     columns: Relation<Columns>[];
