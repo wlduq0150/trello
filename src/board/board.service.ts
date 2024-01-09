@@ -1,10 +1,15 @@
-import { Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
+import {
+    Injectable,
+    NotFoundException,
+    UnauthorizedException,
+} from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { CreateBoardDto } from "./dto/createBoard.dto";
 import { Board } from "src/entity/board.entity";
 import { UpdateBoardDto } from "./dto/uptadeBoard.dto";
 import { UserService } from "src/user/user.service";
+import { User } from "src/entity/user.entity";
 
 @Injectable()
 export class BoardService {
@@ -18,6 +23,7 @@ export class BoardService {
         const board = await this.boardRepository.save({
             ...createBoardDto,
             users: [user],
+            creator: user.id,
         });
 
         return board;
@@ -29,21 +35,16 @@ export class BoardService {
             relations: { users: true, columns: true },
         });
     }
+    async readMyBoards(userId: number) {
+        const user = await this.userService.findUserByIdWithBoards(userId);
 
-    async readMyBoards(id: number) {
-        const myBoards = await this.boardRepository
-            .createQueryBuilder("board")
-            .leftJoinAndSelect("board.users", "user")
-            .where("user.id= :id", { id })
-            .getMany();
-    
-        if (!myBoards) {
+        if (!user?.boards) {
             throw new NotFoundException(
                 "사용자가 속한 보드가 존재하지 않습니다.",
             );
         }
-    
-        return myBoards;
+
+        return user.boards;
     }
 
     async updateBoard(id: number, updateBoardDto: UpdateBoardDto) {
@@ -63,25 +64,25 @@ export class BoardService {
         return board;
     }
 
-    async deleteBoard(boardId: number, userId: number) {
-        const board = await this.boardRepository.findOne({ where: { id:boardId } });
+    async deleteBoard(id: number, userId: number) {
+        const board = await this.boardRepository.findOne({ where: { id } });
         console.log("board", board);
         if (!board) {
             throw new NotFoundException("보드가 존재하지 않습니다.");
         }
-        const user = await this.userService.findUserById(board.creator);
-        console.log('user', user)
+        const user = await this.userService.findUserById(userId);
+        console.log("user", user);
         const creator = await this.userService.findUserById(board.creator);
-        console.log('creator', creator)
-    
+        console.log("creator", creator);
+
         if (creator.id !== user.id) {
             throw new UnauthorizedException("삭제할 권한이 없습니다.");
         }
-    
-        await this.boardRepository.delete({ id:boardId });
+
+        await this.boardRepository.delete({ id });
         return {
             message: "보드가 성공적으로 삭제되었습니다.",
         };
     }
-    
 }
+

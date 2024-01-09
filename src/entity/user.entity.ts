@@ -41,7 +41,7 @@ export class User {
     @OneToMany(() => Comment, (comment) => comment.user)
     comments: Relation<Comment>[];
 
-    @ManyToMany(() => Board, (board) => board.users)
+    @ManyToMany(() => Board, (board) => board.users,{cascade:true})
     boards: Relation<Board>[];
 
     @OneToMany(() => Card, (card) => card.user)

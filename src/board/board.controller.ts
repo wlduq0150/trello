@@ -14,6 +14,9 @@ import { ApiBearerAuth } from "@nestjs/swagger";
 import { accessTokenGuard } from "src/auth/guard/access-token.guard";
 import { UpdateBoardDto } from "./dto/uptadeBoard.dto";
 import { UserId } from "src/auth/decorators/userId.decorator";
+import { User } from "src/entity/user.entity";
+import { userInfo } from "os";
+import { identity } from "rxjs";
 
 @Controller("boards")
 export class BoardController {
@@ -32,9 +35,9 @@ export class BoardController {
     @ApiBearerAuth("accessToken")
     @UseGuards(accessTokenGuard)
     @Get("myboards")
-    readMyBoards(@UserId() id: number) {
-        console.log("id", id);
-        return this.boardService.readMyBoards(+id);
+    readMyBoards(@UserId() userId: number) {
+        console.log("id", userId);
+        return this.boardService.readMyBoards(+userId);
     }
 
     @ApiBearerAuth("accessToken")
@@ -56,8 +59,8 @@ export class BoardController {
 
     @ApiBearerAuth("accessToken")
     @UseGuards(accessTokenGuard)
-    @Delete("/:boardId")
-    deleteBoard(@Param("id") boardId: number,@UserId() userId: number) {
-        return this.boardService.deleteBoard(boardId,userId);
+    @Delete("/:id")
+    deleteBoard(@Param("id") id: number, @UserId() userId: number) {
+        return this.boardService.deleteBoard(id,userId );
     }
 }
