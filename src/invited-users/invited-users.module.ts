@@ -4,12 +4,12 @@ import { InvitedUsersService } from "./invited-users.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { Board } from "src/entity/board.entity";
 import { User } from "src/entity/user.entity";
+import { InvitedUsers } from "src/entity/invited-users.entity";
 import { MailerModule, MailerService } from "@nestjs-modules/mailer";
 import { HandlebarsAdapter } from "@nestjs-modules/mailer/dist/adapters/handlebars.adapter";
 import { ConfigService } from "@nestjs/config";
 import { JwtModule } from "@nestjs/jwt";
 import { AuthModule } from "src/auth/auth.module";
-import { InvitedUsers } from "src/entity/invited-users.entity";
 
 @Module({
     imports: [

@@ -26,6 +26,8 @@ export class InvitedUsersController {
         return this.invitedUsersService.InviteUser(userId, boardId);
     }
 
+    @ApiBearerAuth("accessToken")
+    @UseGuards(accessTokenGuard)
     @Post()
     async verifyEmail(
         @Query("token") token: string

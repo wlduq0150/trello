@@ -9,6 +9,7 @@ import { BoardModule } from './board/board.module';
 import { CommentModule } from './comment/comment.module';
 import { ColumnModule } from './column/column.module';
 import { CardModule } from './card/card.module';
+import { InvitedUsersModule } from "./invited-users/invited-users.module";
 
 @Module({
     imports: [
@@ -20,6 +21,7 @@ import { CardModule } from './card/card.module';
         CommentModule,
         ColumnModule,
         CardModule,
+        InvitedUsersModule
     ],
     controllers: [AppController],
     providers: [AppService],

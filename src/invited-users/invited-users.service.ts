@@ -2,11 +2,11 @@ import { BadRequestException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository, getConnection } from "typeorm";
 import { InvitedUsers } from "src/entity/invited-users.entity";
-import { MailerService } from "@nestjs-modules/mailer";
 import { Board } from "src/entity/board.entity";
 import { User } from "src/entity/user.entity";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
+import { MailerService } from "@nestjs-modules/mailer";
 @Injectable()
 export class InvitedUsersService {
     constructor(
@@ -94,31 +94,9 @@ export class InvitedUsersService {
         user.boards = [...user.boards, board];
         this.userRepository.save(user);
 
-        // invitedUser 테이블 isaccepted true로 변경
-        // invitedUsers.isaccepted = true;
-
         const invitedUser = await this.invitedUserRepository.find({
-            where: {user,board},
+            where: { user, board },
         });
         await this.invitedUserRepository.remove(invitedUser);
-
-        // const invitedUser = this.invitedUserRepository.create({
-        //     user,
-        //     board,
-        // });
-        // await this.invitedUserRepository.save(invitedUser);
-
-
     }
 }
-
-// if (!user || !board) {
-//     throw new BadRequestException("유저 또는 보드를 찾을 수 없습니다.");
-// }
-
-// //invitedUser 테이블에 유저, 보드id 추가
-// const invitedUser = this.invitedUserRepository.create({
-//     user,
-//     board,
-// });
-// await this.invitedUserRepository.save(invitedUser);
