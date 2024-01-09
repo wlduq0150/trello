@@ -10,6 +10,7 @@ import { Repository } from "typeorm";
 import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Board } from "src/entity/board.entity";
+import { LexoRank } from "lexorank";
 
 @Injectable()
 export class ColumnService {
@@ -27,8 +28,12 @@ export class ColumnService {
             .createQueryBuilder("column")
             .leftJoinAndSelect("column.cards", "cards")
             .where("column.id = :id", { id })
-            .select(["column.title", "cards.name", "cards.id"])
+            .select(["column.title", "cards.name", "cards.id", "cards.lexo"])
             .getOne();
+
+        columns.cards = columns.cards.sort((a, b) => {
+            return LexoRank.parse(a.lexo).compareTo(LexoRank.parse(b.lexo));
+        });
 
         if (!columns) {
             throw new NotFoundException("칼럼이 존재하지 않습니다.");

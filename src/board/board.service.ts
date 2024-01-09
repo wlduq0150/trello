@@ -24,10 +24,12 @@ export class BoardService {
     }
 
     async readBoard(id: number) {
-        return await this.boardRepository.findOne({
+        const board = await this.boardRepository.findOne({
             where: { id },
             relations: { users: true, columns: true },
         });
+
+        return board;
     }
 
     async updateBoard(id: number, updateBoardDto: UpdateBoardDto) {

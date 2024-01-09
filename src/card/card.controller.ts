@@ -50,15 +50,15 @@ export class CardController {
         return this.cardService.remove(+id);
     }
 
-    @ApiBearerAuth("accessToken")
-    @UseGuards(accessTokenGuard)
-    @Patch(":id/move")
-    changeColumn(
-        @Param("id") id: string,
-        @Body() changeColumnCardDtoDto: ChangeColumnCardDto,
-    ) {
-        return this.cardService.changeColumn(+id, changeColumnCardDtoDto);
-    }
+    // @ApiBearerAuth("accessToken")
+    // @UseGuards(accessTokenGuard)
+    // @Patch(":id/move")
+    // changeColumn(
+    //     @Param("id") id: string,
+    //     @Body() changeColumnCardDtoDto: ChangeColumnCardDto,
+    // ) {
+    //     return this.cardService.changeColumn(+id, changeColumnCardDtoDto);
+    // }
 
     @ApiBearerAuth("accessToken")
     @UseGuards(accessTokenGuard)

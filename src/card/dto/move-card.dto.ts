@@ -4,7 +4,7 @@ import { IsDate, IsNumber, IsOptional, IsString } from "class-validator";
 export class CardMoveDto {
     @IsOptional()
     @IsNumber()
-    @ApiPropertyOptional({ description: "이전 카드" })
+    @ApiPropertyOptional({ description: "이동할 컬럼 id" })
     columnId?: number;
 
     @IsOptional()

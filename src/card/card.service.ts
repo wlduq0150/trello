@@ -10,6 +10,8 @@ import { ChangeColumnCardDto } from "./dto/change-column-card.dto";
 import { ChangeUserCardDto } from "./dto/change-user-card.dto";
 import { CardMoveDto } from "./dto/move-card.dto";
 import { LexoRank } from "lexorank";
+import { ColumnService } from "src/column/column.service";
+import { getMaxLexoFromColumn } from "./function/getMaxLexo.function";
 
 @Injectable()
 export class CardService {
@@ -29,9 +31,20 @@ export class CardService {
             throw new NotFoundException("존재하지 않는 사용자입니다.");
         }
 
-        const column = await this.columnRepository.findOneBy({ id: columnId });
+        const column = await this.columnRepository.findOne({
+            where: { id: columnId },
+            relations: { cards: true },
+        });
         if (!column) {
             throw new NotFoundException("존재하지 않는 컬럼입니다.");
+        }
+
+        let newLexo: LexoRank;
+
+        if (column.cards.length === 0) {
+            newLexo = LexoRank.middle();
+        } else {
+            newLexo = getMaxLexoFromColumn(column.cards).genNext();
         }
 
         return await this.cardRepository.save({
@@ -41,6 +54,7 @@ export class CardService {
             content,
             color,
             deadline,
+            lexo: newLexo.toString(),
         });
     }
 
@@ -130,6 +144,17 @@ export class CardService {
 
     async cardMove(cardId: number, { columnId, prevId, nextId }: CardMoveDto) {
         const card = await this.findCardById(cardId);
+
+        if (columnId) {
+            const column = await this.columnRepository.findOneBy({
+                id: columnId,
+            });
+            if (!column) {
+                throw new NotFoundException("존재하지 않는 컬럼입니다.");
+            }
+
+            card.column = column;
+        }
 
         let prevCard: Card = null;
         let nextCard: Card = null;
