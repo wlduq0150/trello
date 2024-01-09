@@ -9,6 +9,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { ChangeColumnCardDto } from "./dto/change-column-card.dto";
 import { ChangeUserCardDto } from "./dto/change-user-card.dto";
 import { SseService } from "src/sse/sse.service";
+import { Cron } from "@nestjs/schedule";
 
 @Injectable()
 export class CardService {
@@ -40,7 +41,7 @@ export class CardService {
             name,
             content,
             color,
-            deadline,
+            deadline: deadline.toLocaleString(),
         });
     }
 
@@ -123,10 +124,32 @@ export class CardService {
             },
         );
 
-        this.sseService.emitCardChangeEvent(user.id);
+        this.sseService.emitCardChangeEvent(user.id, "카드가 수정되었습니다.");
 
         return {
             message: `${id}번 카드의 담당자를 ${userId}번 사용자로 변경했습니다.`,
         };
+    }
+
+    @Cron("32 15 * * *")
+    async sendDeadlinAlarm() {
+        const today = new Date().getDate();
+        const cards = await this.cardRepository.find({
+            relations: {
+                user: true,
+            },
+            select: ["id", "deadline", "user"],
+        });
+        const deadlineAlarm = cards
+            .filter((card) => card.deadline.getDate() == today + 1)
+            .map((card) => {
+                return { cardId: card.id, userId: card.user.id };
+            })
+            .map((card) => {
+                this.sseService.emitCardChangeEvent(
+                    card.userId,
+                    `${card.cardId}의 마감 기한이 하루 남았습니다.`,
+                );
+            });
     }
 }

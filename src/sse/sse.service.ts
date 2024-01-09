@@ -7,8 +7,8 @@ export class SseService {
 
     private observer = this.users$.asObservable();
 
-    emitCardChangeEvent(userId: number) {
-        this.users$.next({ id: userId });
+    emitCardChangeEvent(userId: number, message: string) {
+        this.users$.next({ id: userId, message: message });
     }
 
     sendClientAlarm(userId: number): Observable<any> {
@@ -17,7 +17,7 @@ export class SseService {
             map((user) => {
                 return {
                     data: {
-                        message: "카드가 수정되었습니다.",
+                        message: user.message,
                     },
                 } as MessageEvent;
             }),
