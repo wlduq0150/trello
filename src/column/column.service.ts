@@ -28,7 +28,7 @@ export class ColumnService {
             .createQueryBuilder("column")
             .leftJoinAndSelect("column.cards", "cards")
             .where("column.id = :id", { id })
-            .select(["column.title", "cards.name", "cards.id", "cards.lexo"])
+            .select(["column.title", "cards.name", "cards.id", "cards.lexo", "cards.color"])
             .getOne();
 
         columns.cards = columns.cards.sort((a, b) => {

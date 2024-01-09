@@ -12,6 +12,8 @@ import { CardMoveDto } from "./dto/move-card.dto";
 import { LexoRank } from "lexorank";
 import { ColumnService } from "src/column/column.service";
 import { getMaxLexoFromColumn } from "./function/getMaxLexo.function";
+import { SseService } from "src/sse/sse.service";
+import { Cron } from "@nestjs/schedule";
 
 @Injectable()
 export class CardService {
@@ -21,6 +23,7 @@ export class CardService {
         @InjectRepository(Columns)
         private readonly columnRepository: Repository<Columns>,
         private readonly userSerivce: UserService,
+        private readonly sseService: SseService,
     ) {}
 
     async create(userId: number, createCardDto: CreateCardDto) {
@@ -53,8 +56,8 @@ export class CardService {
             name,
             content,
             color,
-            deadline,
             lexo: newLexo.toString(),
+            deadline: deadline.toLocaleString(),
         });
     }
 
@@ -137,6 +140,8 @@ export class CardService {
             },
         );
 
+        this.sseService.emitCardChangeEvent(user.id, "카드가 수정되었습니다.");
+
         return {
             message: `${id}번 카드의 담당자를 ${userId}번 사용자로 변경했습니다.`,
         };
@@ -178,5 +183,28 @@ export class CardService {
         await this.cardRepository.save(card);
 
         return true;
+    }
+  
+    @Cron("0 9 * * *")
+    async sendDeadlinAlarm() {
+        const today = new Date().getDate();
+        const cards = await this.cardRepository.find({
+            relations: {
+                user: true,
+            },
+            select: ["id", "deadline", "user"],
+        });
+        const deadlineAlarm = cards
+            .filter((card) => card.deadline.getDate() == today + 1)
+            .map((card) => {
+                return { cardId: card.id, userId: card.user.id };
+            })
+            .map((card) => {
+                this.sseService.emitCardChangeEvent(
+                    card.userId,
+                    `${card.cardId}의 마감 기한이 하루 남았습니다.`,
+                );
+            });
+
     }
 }
