@@ -11,6 +11,7 @@ import {
 import { Comment } from "./comment.entity";
 import { Board } from "./board.entity";
 import { Card } from "./card.entity";
+import { InvitedUsers } from "./invited-users.entity";
 
 @Entity({
     name: "users", // 데이터베이스 테이블의 이름
@@ -40,9 +41,12 @@ export class User {
     @OneToMany(() => Comment, (comment) => comment.user)
     comments: Relation<Comment>[];
 
-    @ManyToMany(() => Board, (board) => board.users)
+    @ManyToMany(() => Board, (board) => board.users,{cascade:true})
     boards: Relation<Board>[];
 
     @OneToMany(() => Card, (card) => card.user)
     cards: Relation<Card>[];
+
+    @OneToMany(() => InvitedUsers, (inviteduser) => inviteduser.user)
+    Invitedusers:Relation<InvitedUsers>
 }
