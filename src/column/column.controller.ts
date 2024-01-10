@@ -15,6 +15,7 @@ import { accessTokenGuard } from "src/auth/guard/access-token.guard";
 import { CreateColumnDto } from "./dto/create-column.dto";
 import { UpdateColumnDto } from "./dto/update-column.dto";
 import { UserId } from "src/auth/decorators/userId.decorator";
+import { ColumnMoveDto } from "./dto/move-column.dto";
 
 // :boardId/columns
 @Controller("columns")
@@ -54,5 +55,16 @@ export class ColumnController {
     @Delete(":columnsId")
     deleteColumn(@Param("columnsId") id: string) {
         return this.columnService.deleteColumn(+id);
+    }
+
+    //컬럼 이동
+    @ApiBearerAuth("accessToken")
+    @UseGuards(accessTokenGuard)
+    @Patch(":id/move")
+    columnMove(
+        @Param("id") columnId: number,
+        @Body() columnMoveDto: ColumnMoveDto,
+    ) {
+        return this.columnService.columnMove(columnId, columnMoveDto);
     }
 }

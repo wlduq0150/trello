@@ -28,6 +28,9 @@ export class Card {
     @Column({ default: "카드 색상" })
     color: string;
 
+    @Column({ nullable: false })
+    lexo: string;
+
     @Column({ nullable: true })
     deadline: Date;
 

@@ -10,6 +10,7 @@ import { Board } from "src/entity/board.entity";
 import { UpdateBoardDto } from "./dto/uptadeBoard.dto";
 import { UserService } from "src/user/user.service";
 import { User } from "src/entity/user.entity";
+import { LexoRank } from "lexorank";
 
 @Injectable()
 export class BoardService {
@@ -30,10 +31,16 @@ export class BoardService {
     }
 
     async readBoard(id: number) {
-        return await this.boardRepository.findOne({
+        const board = await this.boardRepository.findOne({
             where: { id },
             relations: { users: true, columns: true },
         });
+
+        board.columns = board.columns.sort((a, b) => {
+            return LexoRank.parse(a.lexo).compareTo(LexoRank.parse(b.lexo));
+        });
+
+        return board;
     }
     async readMyBoards(userId: number) {
         const user = await this.userService.findUserByIdWithBoards(userId);
