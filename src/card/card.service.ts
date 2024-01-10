@@ -127,6 +127,7 @@ export class CardService {
         );
 
         this.sseService.emitCardChangeEvent(user.id, "카드가 수정되었습니다.");
+        this.alarmService.createAlarm(user.id, "카드가 수정되었습니다.");
 
         return {
             message: `${id}번 카드의 담당자를 ${userId}번 사용자로 변경했습니다.`,
