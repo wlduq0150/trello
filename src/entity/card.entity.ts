@@ -28,7 +28,7 @@ export class Card {
     @Column({ default: "카드 색상" })
     color: string;
 
-    @Column()
+    @Column({ nullable: false })
     lexo: string;
 
     @Column({ nullable: true })
