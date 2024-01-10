@@ -11,7 +11,8 @@ import { ColumnModule } from "./column/column.module";
 import { CardModule } from "./card/card.module";
 import { SseModule } from "./sse/sse.module";
 import { ScheduleModule } from "@nestjs/schedule";
-import { AlarmModule } from './alarm/alarm.module';
+import { AlarmModule } from "./alarm/alarm.module";
+import { InvitedUsersModule } from "./invited-users/invited-users.module";
 
 @Module({
     imports: [
@@ -23,6 +24,7 @@ import { AlarmModule } from './alarm/alarm.module';
         CommentModule,
         ColumnModule,
         CardModule,
+        InvitedUsersModule,
         SseModule,
         ScheduleModule.forRoot(),
         AlarmModule,
