@@ -30,7 +30,7 @@ export class AlarmController {
     @ApiBearerAuth("accessToken")
     @UseGuards(accessTokenGuard)
     @Delete(":alarmId")
-    deleteAlarm(@Param("alarmId") id: string) {
-        return this.alarmService.deleteAlarm(+id);
+    deleteAlarm(@Param("alarmId") id: string, @UserId() userId: number) {
+        return this.alarmService.deleteAlarm(+id, userId);
     }
 }

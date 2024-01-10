@@ -2,6 +2,7 @@ import {
     ConflictException,
     Injectable,
     NotFoundException,
+    UnauthorizedException,
 } from "@nestjs/common";
 import { Repository } from "typeorm";
 import { ConfigService } from "@nestjs/config";
@@ -36,6 +37,7 @@ export class AlarmService {
             .leftJoinAndSelect("alarm.user", "user")
             .where("alarm.userId = :userId", { userId })
             .select(["alarm.id", "alarm.message", "alarm.createdAt"])
+            .orderBy({ "alarm.createdAt": "DESC" })
             .getMany();
 
         if (!alarms) {
@@ -44,7 +46,22 @@ export class AlarmService {
         return alarms;
     }
 
-    async deleteAlarm(id: number) {
+    async deleteAlarm(id: number, userId: number) {
+        const user = await this.userService.findUserById(userId);
+        const alarm = await this.alarmRepository.findOne({
+            where: { id },
+            relations: {
+                user: true,
+            },
+        });
+
+        if (alarm.user.id !== userId) {
+            throw new UnauthorizedException("삭제 권한이 없습니다.");
+        }
+
+        if (!alarm) {
+            throw new NotFoundException("알림이 존재하지 않습니다.");
+        }
         await this.alarmRepository.delete({ id });
         return {
             message: "알람 삭제",
