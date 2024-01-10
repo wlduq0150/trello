@@ -21,6 +21,7 @@ export class TypeormModule {
                 database: configService.get<string>("DATABASE_NAME"),
                 entities: [User, Board, Card, Columns, Comment, InvitedUsers],
                 synchronize: true,
+                logging: true,
             }),
             inject: [ConfigService],
         });

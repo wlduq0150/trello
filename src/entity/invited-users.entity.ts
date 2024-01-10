@@ -17,8 +17,11 @@ export class InvitedUsers {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ default: false })
-    isaccepted: boolean;
+    @Column()
+    userId: number;
+
+    @Column()
+    boardId: number;
 
     @CreateDateColumn()
     createdAt: Date;

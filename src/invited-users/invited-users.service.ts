@@ -46,6 +46,17 @@ export class InvitedUsersService {
             throw new BadRequestException("유저 또는 보드를 찾을 수 없습니다.");
         }
 
+        console.log("user", user);
+        console.log("board", board);
+
+        const existingInvitedUser  = await this.invitedUserRepository.findOne({
+            where: { userId: user.id, boardId: board.id },
+        });
+
+        if(existingInvitedUser) {
+            throw new BadRequestException ("해당 유저는 이미 초대되었습니다.")
+        }
+
         //invitedUser 테이블에 유저, 보드id 추가
         const invitedUser = this.invitedUserRepository.create({
             user,
@@ -55,23 +66,21 @@ export class InvitedUsersService {
 
         const token = this.generateAccessToken(user.id, board.id);
 
-        const baseUrl = "http://localhost:5000"; // TODO: config
+        const baseUrl = "http://localhost:5000";
 
         const url = `${baseUrl}/invited-users?token=${token.accessToken}`;
 
-        await this.mailerService
-            .sendMail({
-                to: user.email,
-                from: this.configService.get<string>("MAIL_USER"),
-                subject: "트렐로 초대합니다",
-                html: `
+        await this.mailerService.sendMail({
+            to: user.email,
+            from: this.configService.get<string>("MAIL_USER"),
+            subject: "트렐로 초대합니다",
+            html: `
         초대수락 버튼를 누르시면 초대 인증이 완료됩니다.<br/>
         <form action="${url}" method="POST">
           <button>초대수락</button>
         </form>
       `,
-               
-            })
+        });
         return { message: "초대가 성공적으로 발송되었습니다." };
     }
 
@@ -81,17 +90,25 @@ export class InvitedUsersService {
             secret: this.configService.get<string>("JWT_ACCESS_TOKEN_SECRET"),
         });
         const user = await this.userRepository.findOne({
-            where: { id: payload.userId },relations:{boards:true}
+            where: { id: payload.userId },
+            relations: { boards: true },
         });
         const board = await this.boardRepository.findOne({
             where: { id: payload.boardId },
         });
-        user.boards = [...user.boards, board];
-        this.userRepository.save(user);
+
+        if (!user || !board) {
+            throw new BadRequestException("유저 또는 보드를 찾을 수 없습니다.");
+        }
 
         const invitedUser = await this.invitedUserRepository.find({
-            where: { user, board },
+            where: { userId: user.id, boardId: board.id },
         });
+        console.log("invitedUser", invitedUser);
+
+        user.boards = [...user.boards, board];
+        await this.userRepository.save(user);
+
         await this.invitedUserRepository.remove(invitedUser);
     }
 }

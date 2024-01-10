@@ -14,9 +14,6 @@ import { ApiBearerAuth } from "@nestjs/swagger";
 import { accessTokenGuard } from "src/auth/guard/access-token.guard";
 import { UpdateBoardDto } from "./dto/uptadeBoard.dto";
 import { UserId } from "src/auth/decorators/userId.decorator";
-import { User } from "src/entity/user.entity";
-import { userInfo } from "os";
-import { identity } from "rxjs";
 
 @Controller("boards")
 export class BoardController {
