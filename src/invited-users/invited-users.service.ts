@@ -49,12 +49,12 @@ export class InvitedUsersService {
         console.log("user", user);
         console.log("board", board);
 
-        const existingInvitedUser  = await this.invitedUserRepository.findOne({
+        const existingInvitedUser = await this.invitedUserRepository.findOne({
             where: { userId: user.id, boardId: board.id },
         });
 
-        if(existingInvitedUser) {
-            throw new BadRequestException ("해당 유저는 이미 초대되었습니다.")
+        if (existingInvitedUser) {
+            throw new BadRequestException("해당 유저는 이미 초대되었습니다.");
         }
 
         //invitedUser 테이블에 유저, 보드id 추가
@@ -66,7 +66,7 @@ export class InvitedUsersService {
 
         const token = this.generateAccessToken(user.id, board.id);
 
-        const baseUrl = "http://localhost:5000";
+        const baseUrl = "http://localhost:5001";
 
         const url = `${baseUrl}/invited-users?token=${token.accessToken}`;
 

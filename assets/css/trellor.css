@@ -1,0 +1,106 @@
+.container {
+    display: flex;
+}
+.board-list {
+    width: 200px;
+    height: 350px;
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid black;
+    overflow-y: auto;
+}
+.board-item {
+    background-color: #f4f4f4;
+    margin: 5px 0;
+    padding: 5px;
+}
+.board-data {
+    width: 1000px;
+    height: 350px;
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid black;
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+}
+
+.column {
+    width: 200px;
+    height: 260px;
+    margin: 5px;
+    padding: 5px;
+    border: 1px solid black;
+    background-color: #f4f4f4;
+    overflow-y: auto;
+}
+.card {
+    background-color: #eee;
+    margin: 5px 0;
+    padding: 5px;
+}
+#cardBtn {
+    display: flex;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    min-width: 160px;
+    z-index: 1;
+}
+
+.dropdown-content a {
+    color: black;
+    background-color: saddlebrown;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* 수정 form 디자인 */
+form {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 15px;
+}
+
+form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+form input[type="text"],
+form textarea,
+form input[type="color"],
+form input[type="date"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+form input[type="submit"] {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+form input[type="submit"]:hover {
+    background-color: #0056b3;
+}

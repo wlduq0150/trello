@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Signup</title>
+        <link rel="stylesheet" href="css/singup.css" />
+    </head>
+
+    <body>
+        <form
+            id="signupForm"
+            action="/signup"
+            method="post"
+            onsubmit="submitForm(event)"
+        >
+            <h1>Signup</h1>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required />
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required />
+            <button type="button" onclick="checkDuplicateEmail()">
+                중복확인
+            </button>
+            <span id="emailError" class="error"></span>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required />
+            <label for="confirmPassword">Confirm Password:</label>
+            <input
+                type="password"
+                id="confirmPassword"
+                name="passwordConfirm"
+                onkeyup="checkPasswordMatch()"
+                required
+            />
+            <span id="passwordError" class="error"></span>
+            <div class="submit_line">
+                <button type="submit">Signup</button>
+            </div>
+            <p>
+                이미 계정이 있으신가요? <a href="login.html">로그인</a> 하세요.
+            </p>
+        </form>
+
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script src="../js/constant.js"></script>
+        <script src="../js/signup.js"></script>
+    </body>
+</html>
