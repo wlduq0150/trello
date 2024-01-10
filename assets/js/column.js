@@ -1,4 +1,60 @@
-const board_back = document.getElementById("board-data");
+async function columnMove(event) {
+    if (event.target.className !== "column") return;
+
+    const id = event.target.dataset.id;
+    console.log("이동: ", id);
+
+    let prevId = null;
+    let nextId = null;
+
+    const boardDataDiv = document.getElementById("board-data");
+    const columns = boardDataDiv.children;
+
+    let changedColumnIndex = -1;
+
+    for (let idx in columns) {
+        if (idx === "length") break;
+
+        if (columns[idx].getAttribute("data-id") === id) {
+            changedColumnIndex = +idx;
+        }
+    }
+
+    console.log(changedColumnIndex);
+
+    if (changedColumnIndex !== -1 && changedColumnIndex > 0) {
+        prevId = columns[changedColumnIndex - 1].getAttribute("data-id");
+    }
+
+    if (changedColumnIndex !== -1 && changedColumnIndex < columns.length - 1) {
+        nextId = columns[changedColumnIndex + 1].getAttribute("data-id");
+    }
+
+    console.log("prev ", prevId);
+    console.log("next ", nextId);
+
+    let response;
+
+    try {
+        response = await axios.patch(
+            server + `/columns/${id}/move`,
+
+            {
+                prevId,
+                nextId,
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                },
+            },
+        );
+    } catch (e) {
+        response = e.response;
+    }
+
+    console.log(response);
+}
 
 //컴럼 조회
 async function updateBoardData(boardid) {
@@ -19,10 +75,9 @@ async function updateBoardData(boardid) {
 
             columns.forEach((column, index) => {
                 boardDataDiv.innerHTML += `
-                <div>
-                    <div class="column">
+                <div data-id="${column.id}" draggable="true" class="column" ondragend="columnMove(event)">
+                    <div class="column_">
                         <h3>
-                        <div style="display: flex">
                         <div class="dropdown">
                             <button class="dropbtn"><i class="fas fa-solid fa-bars"></i></button>
                             <div class="dropdown-content">
@@ -36,7 +91,7 @@ async function updateBoardData(boardid) {
                         <div id="card-data-${index}"></div>
                     </div>
                     <div>
-                        <button onclick="setTimeout(createCardform(${column.id}), 0)" id="cardBtn" data-bs-toggle="modal" data-bs-target="#createCardModal">Add a card...</button>
+                        <button onclick="setTimeout(createCardform(${column.id}), 0)" id="cardBtn" data-bs-toggle="modal" data-bs-target="#createCardModal"><i class="fas fa-solid fa-plus"></i> Add a card</button>
                     </div>
                 </div>`;
                 setTimeout(() => {

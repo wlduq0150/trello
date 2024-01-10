@@ -1,3 +1,76 @@
+async function cardMove(event) {
+    const id = event.target.dataset.id;
+    console.log("이동: ", id);
+
+    const columnId = event.target.parentNode.parentNode.parentNode.dataset.id;
+    console.log(columnId);
+
+    let prevId = null;
+    let nextId = null;
+
+    const boardDataDiv = document.getElementById("board-data");
+    const columns = boardDataDiv.children;
+
+    let changedColumn;
+
+    for (let idx in columns) {
+        if (idx === "length") break;
+
+        if (columns[idx].getAttribute("data-id") === columnId) {
+            changedColumn = columns[idx].children[0].children[1];
+        }
+    }
+
+    console.log(changedColumn);
+    const cards = changedColumn.children;
+    console.log(cards);
+    let changedCardIndex = -1;
+
+    for (let idx in cards) {
+        if (idx === "length") break;
+
+        if (cards[idx].getAttribute("data-id") === id) {
+            changedCardIndex = +idx;
+        }
+    }
+
+    console.log(changedCardIndex);
+
+    if (changedCardIndex !== -1 && changedCardIndex > 0) {
+        prevId = cards[changedCardIndex - 1].getAttribute("data-id");
+    }
+
+    if (changedCardIndex !== -1 && changedCardIndex < columns.length - 1) {
+        nextId = cards[changedCardIndex + 1].getAttribute("data-id");
+    }
+
+    console.log("prev ", prevId);
+    console.log("next ", nextId);
+
+    let response;
+
+    try {
+        response = await axios.patch(
+            server + `/cards/${id}/move`,
+
+            {
+                columnId,
+                prevId,
+                nextId,
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                },
+            },
+        );
+    } catch (e) {
+        response = e.response;
+    }
+
+    console.log(response);
+}
+
 //카드 목록
 async function updateCardData(columnid, index) {
     const cardData = document.getElementById("card-data-" + index);
@@ -13,7 +86,8 @@ async function updateCardData(columnid, index) {
 
             cards.cards.forEach((card) => {
                 cardData.innerHTML += `
-                <div draggable="true" style="display:flex; background-color: ${card.color}" class="card">
+                <div data-id=${card.id} draggable="true" style="border-radius: 15px; border: solid 5px ${card.color}; background-color: white;" class="card" ondragend="cardMove(event)">
+                <div class="cardInner">
                 <div class="dropdown">
                     <button class="dropbtn"><i class="fas fa-solid fa-bars"></i></button>
                     <div class="dropdown-content">
@@ -22,6 +96,7 @@ async function updateCardData(columnid, index) {
                     </div>
                 </div>
                 ${card.name}
+                </div>
               </div>`;
             });
         })
