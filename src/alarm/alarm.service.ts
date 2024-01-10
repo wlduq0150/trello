@@ -34,7 +34,7 @@ export class AlarmService {
             .createQueryBuilder("alarm")
             .leftJoinAndSelect("alarm.user", "user")
             .where("alarm.userId = :userId", { userId })
-            .select(["alarm.id", "alarm.message"])
+            .select(["alarm.id", "alarm.message", "alarm.createdAt"])
             .getMany();
 
         if (!alarms) {

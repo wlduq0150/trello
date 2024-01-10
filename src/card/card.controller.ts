@@ -21,11 +21,6 @@ import { ChangeUserCardDto } from "./dto/change-user-card.dto";
 export class CardController {
     constructor(private readonly cardService: CardService) {}
 
-    @Get("test")
-    sendDeadlinAlarm() {
-        return this.cardService.sendDeadlinAlarm();
-    }
-
     @ApiBearerAuth("accessToken")
     @UseGuards(accessTokenGuard)
     @Post()
