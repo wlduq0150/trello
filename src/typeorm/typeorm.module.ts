@@ -6,6 +6,7 @@ import { Board } from "src/entity/board.entity";
 import { Card } from "src/entity/card.entity";
 import { User } from "src/entity/user.entity";
 import { Columns } from "src/entity/column.entity";
+import { InvitedUsers } from "src/entity/invited-users.entity";
 import { Alarm } from "src/entity/alarm.entity";
 
 @Module({})
@@ -19,8 +20,17 @@ export class TypeormModule {
                 username: configService.get<string>("DATABASE_USERNAME"),
                 password: configService.get<string>("DATABASE_PASSWORD"),
                 database: configService.get<string>("DATABASE_NAME"),
-                entities: [User, Board, Card, Columns, Comment, Alarm],
+                entities: [
+                    User,
+                    Board,
+                    Card,
+                    Columns,
+                    Comment,
+                    Alarm,
+                    InvitedUsers,
+                ],
                 synchronize: true,
+                logging: false,
             }),
             inject: [ConfigService],
         });

@@ -14,6 +14,7 @@ import { ColumnService } from "src/column/column.service";
 import { getMaxLexoFromColumn } from "./function/getMaxLexo.function";
 import { SseService } from "src/sse/sse.service";
 import { Cron } from "@nestjs/schedule";
+import { AlarmService } from "src/alarm/alarm.service";
 
 @Injectable()
 export class CardService {
@@ -24,6 +25,7 @@ export class CardService {
         private readonly columnRepository: Repository<Columns>,
         private readonly userSerivce: UserService,
         private readonly sseService: SseService,
+        private readonly alarmService: AlarmService,
     ) {}
 
     async create(userId: number, createCardDto: CreateCardDto) {
@@ -56,8 +58,8 @@ export class CardService {
             name,
             content,
             color,
+            deadline,
             lexo: newLexo.toString(),
-            deadline: deadline.toLocaleString(),
         });
     }
 
@@ -141,6 +143,7 @@ export class CardService {
         );
 
         this.sseService.emitCardChangeEvent(user.id, "카드가 수정되었습니다.");
+        this.alarmService.createAlarm(user.id, "카드가 수정되었습니다.");
 
         return {
             message: `${id}번 카드의 담당자를 ${userId}번 사용자로 변경했습니다.`,
@@ -169,7 +172,9 @@ export class CardService {
 
         let newLexo: LexoRank;
 
-        if (!prevCard) {
+        if (!prevCard && !nextCard) {
+            newLexo = LexoRank.middle();
+        } else if (!prevCard) {
             newLexo = LexoRank.parse(nextCard.lexo).genPrev();
         } else if (!nextCard) {
             newLexo = LexoRank.parse(prevCard.lexo).genNext();
@@ -184,8 +189,8 @@ export class CardService {
 
         return true;
     }
-  
-    @Cron("0 9 * * *")
+
+    @Cron("10 15 * * *")
     async sendDeadlinAlarm() {
         const today = new Date().getDate();
         const cards = await this.cardRepository.find({
@@ -204,7 +209,10 @@ export class CardService {
                     card.userId,
                     `${card.cardId}의 마감 기한이 하루 남았습니다.`,
                 );
+                this.alarmService.createAlarm(
+                    card.userId,
+                    `${card.cardId}의 마감 기한이 하루 남았습니다.`,
+                );
             });
-
     }
 }
