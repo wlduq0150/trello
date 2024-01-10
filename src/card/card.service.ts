@@ -8,6 +8,12 @@ import { Columns } from "src/entity/column.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ChangeColumnCardDto } from "./dto/change-column-card.dto";
 import { ChangeUserCardDto } from "./dto/change-user-card.dto";
+import { CardMoveDto } from "./dto/move-card.dto";
+import { LexoRank } from "lexorank";
+import { ColumnService } from "src/column/column.service";
+import { getMaxLexoFromColumn } from "./function/getMaxLexo.function";
+import { SseService } from "src/sse/sse.service";
+import { Cron } from "@nestjs/schedule";
 
 @Injectable()
 export class CardService {
@@ -17,6 +23,7 @@ export class CardService {
         @InjectRepository(Columns)
         private readonly columnRepository: Repository<Columns>,
         private readonly userSerivce: UserService,
+        private readonly sseService: SseService,
     ) {}
 
     async create(userId: number, createCardDto: CreateCardDto) {
@@ -27,9 +34,20 @@ export class CardService {
             throw new NotFoundException("존재하지 않는 사용자입니다.");
         }
 
-        const column = await this.columnRepository.findOneBy({ id: columnId });
+        const column = await this.columnRepository.findOne({
+            where: { id: columnId },
+            relations: { cards: true },
+        });
         if (!column) {
             throw new NotFoundException("존재하지 않는 컬럼입니다.");
+        }
+
+        let newLexo: LexoRank;
+
+        if (column.cards.length === 0) {
+            newLexo = LexoRank.middle();
+        } else {
+            newLexo = getMaxLexoFromColumn(column.cards).genNext();
         }
 
         return await this.cardRepository.save({
@@ -38,7 +56,8 @@ export class CardService {
             name,
             content,
             color,
-            deadline,
+            lexo: newLexo.toString(),
+            deadline: deadline.toLocaleString(),
         });
     }
 
@@ -121,8 +140,71 @@ export class CardService {
             },
         );
 
+        this.sseService.emitCardChangeEvent(user.id, "카드가 수정되었습니다.");
+
         return {
             message: `${id}번 카드의 담당자를 ${userId}번 사용자로 변경했습니다.`,
         };
+    }
+
+    async cardMove(cardId: number, { columnId, prevId, nextId }: CardMoveDto) {
+        const card = await this.findCardById(cardId);
+
+        if (columnId) {
+            const column = await this.columnRepository.findOneBy({
+                id: columnId,
+            });
+            if (!column) {
+                throw new NotFoundException("존재하지 않는 컬럼입니다.");
+            }
+
+            card.column = column;
+        }
+
+        let prevCard: Card = null;
+        let nextCard: Card = null;
+
+        if (prevId) prevCard = await this.findCardById(prevId);
+        if (nextId) nextCard = await this.findCardById(nextId);
+
+        let newLexo: LexoRank;
+
+        if (!prevCard) {
+            newLexo = LexoRank.parse(nextCard.lexo).genPrev();
+        } else if (!nextCard) {
+            newLexo = LexoRank.parse(prevCard.lexo).genNext();
+        } else {
+            newLexo = LexoRank.parse(prevCard.lexo).between(
+                LexoRank.parse(nextCard.lexo),
+            );
+        }
+
+        card.lexo = newLexo.toString();
+        await this.cardRepository.save(card);
+
+        return true;
+    }
+  
+    @Cron("0 9 * * *")
+    async sendDeadlinAlarm() {
+        const today = new Date().getDate();
+        const cards = await this.cardRepository.find({
+            relations: {
+                user: true,
+            },
+            select: ["id", "deadline", "user"],
+        });
+        const deadlineAlarm = cards
+            .filter((card) => card.deadline.getDate() == today + 1)
+            .map((card) => {
+                return { cardId: card.id, userId: card.user.id };
+            })
+            .map((card) => {
+                this.sseService.emitCardChangeEvent(
+                    card.userId,
+                    `${card.cardId}의 마감 기한이 하루 남았습니다.`,
+                );
+            });
+
     }
 }

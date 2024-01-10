@@ -5,10 +5,13 @@ import { ConfigProjectModule } from "./config/config.module";
 import { TypeormModule } from "./typeorm/typeorm.module";
 import { AuthModule } from "./auth/auth.module";
 import { UserModule } from "./user/user.module";
-import { BoardModule } from './board/board.module';
-import { CommentModule } from './comment/comment.module';
-import { ColumnModule } from './column/column.module';
-import { CardModule } from './card/card.module';
+import { BoardModule } from "./board/board.module";
+import { CommentModule } from "./comment/comment.module";
+import { ColumnModule } from "./column/column.module";
+import { CardModule } from "./card/card.module";
+import { SseModule } from "./sse/sse.module";
+import { ScheduleModule } from "@nestjs/schedule";
+import { AlarmModule } from './alarm/alarm.module';
 
 @Module({
     imports: [
@@ -20,6 +23,9 @@ import { CardModule } from './card/card.module';
         CommentModule,
         ColumnModule,
         CardModule,
+        SseModule,
+        ScheduleModule.forRoot(),
+        AlarmModule,
     ],
     controllers: [AppController],
     providers: [AppService],
