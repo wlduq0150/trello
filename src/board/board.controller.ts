@@ -22,8 +22,19 @@ export class BoardController {
     @ApiBearerAuth("accessToken")
     @UseGuards(accessTokenGuard)
     @Post()
-    createBoard(@Body() createBoardDto: CreateBoardDto, @UserId() userId: number) {
-        return this.boardService.createBoard(createBoardDto,userId);
+    createBoard(
+        @Body() createBoardDto: CreateBoardDto,
+        @UserId() userId: number,
+    ) {
+        return this.boardService.createBoard(createBoardDto, userId);
+    }
+
+    @ApiBearerAuth("accessToken")
+    @UseGuards(accessTokenGuard)
+    @Get("myboards")
+    readMyBoards(@UserId() userId: number) {
+        console.log("id", userId);
+        return this.boardService.readMyBoards(+userId);
     }
 
     @ApiBearerAuth("accessToken")
@@ -46,7 +57,7 @@ export class BoardController {
     @ApiBearerAuth("accessToken")
     @UseGuards(accessTokenGuard)
     @Delete("/:id")
-    deleteBoard(@Param("id") id: number) {
-        return this.boardService.deleteBoard(id);
+    deleteBoard(@Param("id") id: number, @UserId() userId: number) {
+        return this.boardService.deleteBoard(id,userId );
     }
 }

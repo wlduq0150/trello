@@ -10,6 +10,9 @@ import { Repository } from "typeorm";
 import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Board } from "src/entity/board.entity";
+import { LexoRank } from "lexorank";
+import { ColumnMoveDto } from "./dto/move-column.dto";
+import { getMaxLexoFromColumn } from "src/card/function/getMaxLexo.function";
 
 @Injectable()
 export class ColumnService {
@@ -27,8 +30,18 @@ export class ColumnService {
             .createQueryBuilder("column")
             .leftJoinAndSelect("column.cards", "cards")
             .where("column.id = :id", { id })
-            .select(["column.title", "cards.name", "cards.id", "cards.color"])
+            .select([
+                "column.title",
+                "cards.name",
+                "cards.id",
+                "cards.lexo",
+                "cards.color",
+            ])
             .getOne();
+
+        columns.cards = columns.cards.sort((a, b) => {
+            return LexoRank.parse(a.lexo).compareTo(LexoRank.parse(b.lexo));
+        });
 
         if (!columns) {
             throw new NotFoundException("칼럼이 존재하지 않습니다.");
@@ -53,10 +66,21 @@ export class ColumnService {
         const { boardId, title } = createColumnDto;
         const board = await this.boardRepository.findOne({
             where: { id: boardId },
+            relations: { columns: true },
         });
+
+        let newLexo: LexoRank;
+
+        if (board.columns.length === 0) {
+            newLexo = LexoRank.middle();
+        } else {
+            newLexo = getMaxLexoFromColumn(board.columns).genNext();
+        }
+
         const newColumn = await this.columnRepository.save({
             board: board,
             title,
+            lexo: newLexo.toString(),
         });
 
         return newColumn;
@@ -76,5 +100,32 @@ export class ColumnService {
         const column = await this.findColumnById(id);
 
         return await this.columnRepository.delete({ id });
+    }
+
+    async columnMove(columnId: number, { prevId, nextId }: ColumnMoveDto) {
+        const column = await this.findColumnById(columnId);
+
+        let prevColumn: Columns = null;
+        let nextColumn: Columns = null;
+
+        if (prevId) prevColumn = await this.findColumnById(prevId);
+        if (nextId) nextColumn = await this.findColumnById(nextId);
+
+        let newLexo: LexoRank;
+
+        if (!prevColumn) {
+            newLexo = LexoRank.parse(nextColumn.lexo).genPrev();
+        } else if (!nextColumn) {
+            newLexo = LexoRank.parse(prevColumn.lexo).genNext();
+        } else {
+            newLexo = LexoRank.parse(prevColumn.lexo).between(
+                LexoRank.parse(nextColumn.lexo),
+            );
+        }
+
+        column.lexo = newLexo.toString();
+        await this.columnRepository.save(column);
+
+        return true;
     }
 }
