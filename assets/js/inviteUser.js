@@ -1,9 +1,16 @@
-//초대 보드 리스트 부분
+const boardDataDiv_ = document.getElementById("board-data");
 
 //초대 부분
 function inviteUser() {
+    // var boardid;
+    // const boardDataDiv_ = document.getElementById("board-data");
+    // boardDataDiv_.dataset.id = boardid;
+
     const userinfo = document.getElementById("usersinfo");
+    const boardid = boardDataDiv_.dataset.id;
     userinfo.innerHTML = ``;
+
+    console.log(boardid);
 
     axios
         .get("/user", {
@@ -19,20 +26,8 @@ function inviteUser() {
                 userinfo.innerHTML += `
                     <tr>
                     <th scope="row">${user.name}</th>
-                    <td>${user.email}</td>
-                    <td id="boardlist">
-                    <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                      Dropdown button
-                    </button>
-                    <ul class="dropdown-menu">
-                      <li><a class="dropdown-item" href="#">Action</a></li>
-                      <li><a class="dropdown-item" href="#">Another action</a></li>
-                      <li><a class="dropdown-item" href="#">Something else here</a></li>
-                    </ul>
-                  </div>
-                  <td>
-                <td><button onclick="invite(${user.id})">초대하기</button></td>
+                    <td>${user.email}</td> 
+                    <td><button class="btn" onclick="invite(${user.id}, ${boardid})">초대하기</button></td>
                 </tr>
                 `;
             });
@@ -45,11 +40,11 @@ function inviteUser() {
 //User에서 보드 부분도 같이 불러와야함
 // async function
 
-async function invite(userId) {
+async function invite(userId, boardId) {
     // const userId = document.getElementById("userIdInput").value;
     // const boardId = document.getElementById("boardIdInput").value;
-    console.log(userId);
-    const boardId = 6;
+    console.log(userId, boardId);
+
     InviteUser(userId, boardId);
 }
 

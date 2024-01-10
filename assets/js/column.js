@@ -1,5 +1,8 @@
 //컴럼 조회
 async function updateBoardData(boardid) {
+    const boardDataDiv_ = document.getElementById("board-data");
+    boardDataDiv_.dataset.id = boardid;
+
     boardDataDiv.innerHTML = ``;
     columnbtn.innerHTML = ``;
     axios
@@ -15,7 +18,7 @@ async function updateBoardData(boardid) {
             columns.forEach((column, index) => {
                 boardDataDiv.innerHTML += `
                 <div>
-                    <div draggable="true" class="column">
+                    <div class="column">
                         <h3>
                         <div style="display: flex">
                         <div class="dropdown">
