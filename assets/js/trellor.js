@@ -1,7 +1,7 @@
 // app.js
 const boardListDiv = document.getElementById("board-list");
 const boardDataDiv = document.getElementById("board-data");
-const columnbtn = document.getElementById("columnBtn");
+const columnbtn = document.getElementById("column_btn");
 
 window.onload = function () {
     // const boardBtn = document.getElementById("boardBtn");
@@ -26,17 +26,17 @@ window.onload = function () {
             boards.forEach((board) => {
                 boardListDiv.innerHTML += `
                 <div>
-                    <li style="background-color: ${board.background}" onclick="updateBoardData(${board.id})" class="board-item">
-                        ${board.title}
+                    <div style="border-radius: 15px; border: solid 5px ${board.background}; background-color: white;" onclick="updateBoardData(${board.id})" class="board-item">
                         <div class="dropdown">
-                            <button class="dropbtn">메뉴</button>
+                            <button class="dropbtn"><i class="fas fa-solid fa-bars"></i></button>
                             <div class="dropdown-content">
-                            <a onclick="deleteColumn()">삭제</a>
-                            <a onclick="setTimeout(updateBoardform(${board.id}), 0)" data-bs-toggle="modal"
+                                <a onclick="deleteColumn()">삭제</a>
+                                <a onclick="setTimeout(updateBoardform(${board.id}), 0)" data-bs-toggle="modal"
                             data-bs-target="#updateBoardModal">수정</a>
                             </div>
                         </div>
-                    </li>
+                        <span class="titleBox">${board.title}</span>
+                    </div>
                 </div>`;
             });
 

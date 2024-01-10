@@ -13,14 +13,15 @@ async function updateCardData(columnid, index) {
 
             cards.cards.forEach((card) => {
                 cardData.innerHTML += `
-                <div draggable="true" style="background-color: ${card.color}" class="card">${card.name}
+                <div draggable="true" style="display:flex; background-color: ${card.color}" class="card">
                 <div class="dropdown">
-                    <button class="dropbtn">메뉴</button>
+                    <button class="dropbtn"><i class="fas fa-solid fa-bars"></i></button>
                     <div class="dropdown-content">
                     <a onclick="deleteCard(${card.id})">삭제</a>
                     <a onclick="setTimeout(updateCardform(${card.id}), 0)" data-bs-toggle="modal" data-bs-target="#updateCardModal">수정</a>
                     </div>
                 </div>
+                ${card.name}
               </div>`;
             });
         })

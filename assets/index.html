@@ -7,9 +7,51 @@
             integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
             crossorigin="anonymous"
         />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+            integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        />
         <link rel="stylesheet" href="css/trellor.css" />
     </head>
     <body>
+        <div class="header">
+            <div class="logo">
+                <img src="resources/logo.png" id="logo" />
+            </div>
+            <div class="iconBox">
+                <div id="invited_user">
+                    <div>
+                        <button
+                            id="invite_btn"
+                            type="button"
+                            class="btn"
+                            data-bs-toggle="modal"
+                            data-bs-target="#inviteModal"
+                        >
+                            <i class="fas fa-solid fa-user-plus"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 알람 버튼 -->
+                <div id="alarm_Btn">
+                    <div>
+                        <button
+                            id="alarm_btn"
+                            type="button"
+                            class="btn"
+                            data-bs-toggle="modal"
+                            data-bs-target="#alarmModal"
+                        >
+                            <i class="fas fa-solid fa-bell"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="container">
             <div class="board-list">
                 <div id="board-list"></div>
@@ -24,7 +66,7 @@
                         data-bs-toggle="modal"
                         data-bs-target="#createBoardModal"
                     >
-                        Add a board...
+                        <i class="fas fa-solid fa-plus"></i> Add a board
                     </button>
                 </div>
             </div>
@@ -44,36 +86,7 @@
                     
                 </div> -->
             </div>
-            <div id="columnBtn"></div>
-        </div>
-
-        <div id="invited_user">
-            <div>
-                <button
-                    id="invite_btn"
-                    type="button"
-                    class="btn"
-                    data-bs-toggle="modal"
-                    data-bs-target="#inviteModal"
-                >
-                    share
-                </button>
-            </div>
-        </div>
-
-        <!-- 알람 버튼 -->
-        <div id="alarm_Btn">
-            <div>
-                <button
-                    id="alarm_btn"
-                    type="button"
-                    class="btn"
-                    data-bs-toggle="modal"
-                    data-bs-target="#alarmModal"
-                >
-                    alarm
-                </button>
-            </div>
+            <div id="column_btn"></div>
         </div>
 
         <!-- 모달 기능 부분 -->

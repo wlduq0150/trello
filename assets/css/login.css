@@ -18,6 +18,10 @@ body {
     width: 24rem;
 }
 
+.logo {
+    display: inline;
+}
+
 form {
     background-color: white;
     padding: 20px 25px;

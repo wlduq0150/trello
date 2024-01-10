@@ -16,16 +16,17 @@ async function updateBoardData(boardid) {
                 boardDataDiv.innerHTML += `
                 <div>
                     <div draggable="true" class="column">
-                        <h3>${column.title}
+                        <h3>
                         <div style="display: flex">
                         <div class="dropdown">
-                            <button class="dropbtn">메뉴</button>
+                            <button class="dropbtn"><i class="fas fa-solid fa-bars"></i></button>
                             <div class="dropdown-content">
                             <a onclick="deleteColumn(${column.id})">삭제</a>
                             <a onclick="setTimeout(updateColumnform(${column.id}), 0)" data-bs-toggle="modal"
                             data-bs-target="#updatetColumnModal">수정</a>
                             </div>
                         </div>
+                        ${column.title}
                         </h3>
                         <div id="card-data-${index}"></div>
                     </div>
@@ -38,7 +39,7 @@ async function updateBoardData(boardid) {
                 }, 0);
             });
             //컬럼 생성 버튼
-            columnbtn.innerHTML += `<button onclick="setTimeout(createColumnform(${boardid}), 0)" data-bs-toggle="modal" data-bs-target="#createColumnModal" id="boardBtn">Add a Column...</button>`;
+            columnbtn.innerHTML += `<button onclick="setTimeout(createColumnform(${boardid}), 0)" data-bs-toggle="modal" data-bs-target="#createColumnModal" id="columnBtn"><i class="fas fa-solid fa-plus"></i> Add a Column</button>`;
         })
         .catch(function (error) {
             console.log(error);
