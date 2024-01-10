@@ -13,7 +13,8 @@ async function updateCardData(columnid, index) {
 
             cards.cards.forEach((card) => {
                 cardData.innerHTML += `
-                <div draggable="true" style="display:flex; background-color: ${card.color}" class="card">
+                <div draggable="true" style="border-radius: 15px; border: solid 5px ${card.color}; background-color: white;" class="card">
+                <div class="cardInner">
                 <div class="dropdown">
                     <button class="dropbtn"><i class="fas fa-solid fa-bars"></i></button>
                     <div class="dropdown-content">
@@ -22,6 +23,7 @@ async function updateCardData(columnid, index) {
                     </div>
                 </div>
                 ${card.name}
+                </div>
               </div>`;
             });
         })

@@ -9,12 +9,20 @@
 body {
     font-family: "LINESeedKR-Bd";
     background-color: #f4f4f4;
+}
+
+.bodyContainer {
+    height: 90vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100vh;
-    margin: 0 auto;
     width: 27rem;
+    margin: 0 auto;
+}
+
+#logo {
+    display: inline;
+    margin: 10px 15px;
 }
 
 form {
