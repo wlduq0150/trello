@@ -2,10 +2,32 @@
 const boardListDiv = document.getElementById("board-list");
 const boardDataDiv = document.getElementById("board-data");
 const columnbtn = document.getElementById("column_btn");
+const boarddata = document.getElementById("board-dataT");
 
 window.onload = function () {
     // const boardBtn = document.getElementById("boardBtn");
     // const boardId = "1";
+
+    axios
+        .get("/alarm", {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+        })
+        .then(function (response) {
+            const alarms = response.data;
+            console.log(response.data);
+
+            alarms.forEach((alarm) => {
+                subalarm.innerHTML += `
+            <tr>
+                <th scope="row">${alarm.message} <button onclick="alarmDelete(${alarm.id})">삭제</button></th>
+            </tr>`;
+            });
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
 
     axios
         .get("/user/me", {
@@ -21,12 +43,14 @@ window.onload = function () {
 
             //sse 부분
             const eventSource = new EventSource(`http://localhost:5001/sse/${user.id}`);
+
             // SSE 이벤트 수신
             eventSource.onmessage = (event) => {
                 const data = JSON.parse(event.data);
                 console.log("Received data:", data);
-                alarmcheck(data);
+                subAlarm(data);
             };
+
             // SSE 연결이 열렸을 때
             eventSource.onopen = () => {
                 console.log("SSE connection opened");
@@ -41,7 +65,7 @@ window.onload = function () {
             boards.forEach((board) => {
                 boardListDiv.innerHTML += `
                 <div>
-                    <div style="border-radius: 15px; border: solid 5px ${board.background}; background-color: white;" onclick="updateBoardData(${board.id})" class="board-item">
+                    <div style="border-radius: 15px; border: solid 5px ${board.background}; background-color: white;" onclick="updateBoardData(${board.id}), setTimeout(changeColor(${board.id}), 0)" class="board-item">
                         <div class="dropdown">
                             <button class="dropbtn"><i class="fas fa-solid fa-bars"></i></button>
                             <div class="dropdown-content">
@@ -64,6 +88,26 @@ window.onload = function () {
         });
 };
 
+async function logoutform() {
+    axios
+        .post(
+            "auth/logout",
+            {},
+            {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                },
+            },
+        )
+        .then(function (response) {
+            console.log(response);
+            alert("로그아웃되었습니다.");
+            window.location.href = "login.html";
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}
 // //초대 부분
 // function inviteUser() {
 //     const userinfo = document.getElementById("usersinfo");

@@ -1,3 +1,5 @@
+const board_back = document.getElementById("board-data");
+
 //컴럼 조회
 async function updateBoardData(boardid) {
     const boardDataDiv_ = document.getElementById("board-data");
@@ -43,6 +45,27 @@ async function updateBoardData(boardid) {
             });
             //컬럼 생성 버튼
             columnbtn.innerHTML += `<button onclick="setTimeout(createColumnform(${boardid}), 0)" data-bs-toggle="modal" data-bs-target="#createColumnModal" id="columnBtn"><i class="fas fa-solid fa-plus"></i> Add a Column</button>`;
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}
+
+// 보드색상 변경
+function changeColor(id) {
+    console.log(id);
+
+    axios
+        .get("/boards/" + id, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+        })
+        .then(function (response) {
+            console.log(response.data.background);
+            boardColor = response.data.background;
+
+            board_back.style.backgroundColor = boardColor;
         })
         .catch(function (error) {
             console.log(error);
