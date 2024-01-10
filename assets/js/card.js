@@ -159,7 +159,7 @@ async function createCard(columnid) {
 
                 // // 색깔 날짜 저장하는 부분 확인해야함
                 color: formData.get("crcardcolor"),
-                deadline: Date(formData.get("crcarddeadline")),
+                deadline: formData.get("crcarddeadline"),
             },
             {
                 headers: {

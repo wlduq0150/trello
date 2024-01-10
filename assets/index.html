@@ -45,6 +45,7 @@
                             class="btn"
                             data-bs-toggle="modal"
                             data-bs-target="#alarmModal"
+                            onclick="setTimeout(alarmcheck(), 0)"
                         >
                             <i class="fas fa-solid fa-bell"></i>
                         </button>
@@ -168,15 +169,24 @@
                     </div>
                     <div class="modal-body">
                         <table class="table">
+                            <thead>최신알림</thead>
                             <thead>
                                 <tr>
-                                    <th scope="col">카드 ID</th>
-                                    <th scope="col" style="width: 70%">
-                                        메세지
-                                    </th>
+                                    <th scope="col"></th>
                                 </tr>
                             </thead>
-                            <tbody id="alarminfo"></tbody>
+                            <tbody id="alarminfo1"></tbody></br>
+                        </table>
+
+                        <!-- 과거알림 -->
+                        <table class="table">
+                            <thead>과거알림</thead>
+                            <thead>
+                                <tr>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="alarminfo2"></tbody>
                         </table>
                     </div>
                     <div class="modal-footer">
@@ -413,6 +423,7 @@
         <script src="../js/card.js"></script>
         <script src="../js/column.js"></script>
         <script src="../js/inviteUser.js"></script>
+        <script src="../js/alarm.js"></script>
 
         <!-- <script>
             if (localStorage.getItem("accessToken")) {

@@ -17,6 +17,21 @@ window.onload = function () {
             const boards = response.data.boards;
             // console.log(response.data);
 
+            const user = response.data;
+
+            //sse 부분
+            const eventSource = new EventSource(`http://localhost:5001/sse/${user.id}`);
+            // SSE 이벤트 수신
+            eventSource.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                console.log("Received data:", data);
+                alarmcheck(data);
+            };
+            // SSE 연결이 열렸을 때
+            eventSource.onopen = () => {
+                console.log("SSE connection opened");
+            };
+
             // board를 전체 불러오기 api를 구현후 배열로 받아서 foreach로 보드 전체를 불러온다.
             // const newButton = document.createElement("button");
             // newButton.textContent = boards.title;
