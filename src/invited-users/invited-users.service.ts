@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import {
+    BadRequestException,
+    ConflictException,
+    Injectable,
+} from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository, getConnection } from "typeorm";
 import { InvitedUsers } from "src/entity/invited-users.entity";
@@ -45,16 +49,23 @@ export class InvitedUsersService {
         if (!user || !board) {
             throw new BadRequestException("유저 또는 보드를 찾을 수 없습니다.");
         }
-
-        console.log("user", user);
-        console.log("board", board);
-
-        const existingInvitedUser  = await this.invitedUserRepository.findOne({
+        const existingInvitedUser = await this.invitedUserRepository.findOne({
             where: { userId: user.id, boardId: board.id },
         });
 
-        if(existingInvitedUser) {
-            throw new BadRequestException ("해당 유저는 이미 초대되었습니다.")
+        if (existingInvitedUser) {
+            throw new ConflictException("해당 유저는 이미 초대되었습니다.");
+        }
+
+        const existingUserInBoard = await this.userRepository.findOne({
+            where: {
+                id: user.id,
+                boards: { id: board.id },
+            },
+        });
+
+        if (existingUserInBoard) {
+            throw new ConflictException("해당 유저는 이미 보드에 존재합니다.");
         }
 
         //invitedUser 테이블에 유저, 보드id 추가
@@ -73,11 +84,11 @@ export class InvitedUsersService {
         await this.mailerService.sendMail({
             to: user.email,
             from: this.configService.get<string>("MAIL_USER"),
-            subject: "트렐로 초대합니다",
+            subject: "[Trello] Board 멤버로 초대합니다",
             html: `
-        초대수락 버튼를 누르시면 초대 인증이 완료됩니다.<br/>
+        초대수락 버튼를 누르시면 인증이 완료됩니다.<br/>
         <form action="${url}" method="POST">
-          <button>초대수락</button>
+          <button>초대 수락</button>
         </form>
       `,
         });
@@ -104,8 +115,6 @@ export class InvitedUsersService {
         const invitedUser = await this.invitedUserRepository.find({
             where: { userId: user.id, boardId: board.id },
         });
-        console.log("invitedUser", invitedUser);
-
         user.boards = [...user.boards, board];
         await this.userRepository.save(user);
 
