@@ -34,7 +34,7 @@ export class UserService {
 
     async findAll() {
         return await this.userRepository.find({
-            select: ["email", "name", "createdAt", "updatedAt"],
+            select: ["id", "email", "name", "createdAt", "updatedAt"],
         });
     }
 
@@ -42,6 +42,7 @@ export class UserService {
         return await this.userRepository.findOne({
             where: { id },
             select: ["id", "email", "name", "createdAt", "updatedAt"],
+            relations: { boards: true },
         });
     }
 
@@ -49,7 +50,7 @@ export class UserService {
         return await this.userRepository.findOne({
             where: { id },
             select: ["id", "email", "name", "createdAt", "updatedAt"],
-            relations:{boards:true}
+            relations: { boards: true },
         });
     }
 
