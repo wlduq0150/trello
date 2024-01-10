@@ -22,6 +22,9 @@ export class Columns {
     @Column({ nullable: false })
     title: string;
 
+    @Column({ nullable: false })
+    lexo: string;
+
     @CreateDateColumn()
     createdAt: Date;
 
@@ -31,15 +34,12 @@ export class Columns {
     @DeleteDateColumn()
     deletedAt?: Date;
 
-
     @OneToMany(() => Card, (card) => card.column)
     cards: Relation<Card>[];
-
 
     @ManyToOne(() => Board, (board) => board.columns, {
         nullable: false,
         onDelete: "CASCADE",
     })
     board: Relation<Board>;
-
 }

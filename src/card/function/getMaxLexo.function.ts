@@ -1,7 +1,8 @@
 import { LexoRank } from "lexorank";
 import { Card } from "src/entity/card.entity";
+import { Columns } from "src/entity/column.entity";
 
-export function getMaxLexoFromColumn(cards: Card[]) {
+export function getMaxLexoFromColumn(cards: Card[] | Columns[]) {
     let maxLexo = LexoRank.min();
 
     cards.map((card) => {
