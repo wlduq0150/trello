@@ -76,9 +76,8 @@ async function updateBoardData(boardid) {
             columns.forEach((column, index) => {
                 boardDataDiv.innerHTML += `
                 <div data-id="${column.id}" draggable="true" class="column" ondragend="columnMove(event)">
-                    <div>
+                    <div class="column_">
                         <h3>
-                        <div style="display: flex">
                         <div class="dropdown">
                             <button class="dropbtn"><i class="fas fa-solid fa-bars"></i></button>
                             <div class="dropdown-content">
@@ -92,7 +91,7 @@ async function updateBoardData(boardid) {
                         <div id="card-data-${index}"></div>
                     </div>
                     <div>
-                        <button onclick="setTimeout(createCardform(${column.id}), 0)" id="cardBtn" data-bs-toggle="modal" data-bs-target="#createCardModal">Add a card...</button>
+                        <button onclick="setTimeout(createCardform(${column.id}), 0)" id="cardBtn" data-bs-toggle="modal" data-bs-target="#createCardModal"><i class="fas fa-solid fa-plus"></i> Add a card</button>
                     </div>
                 </div>`;
                 setTimeout(() => {
