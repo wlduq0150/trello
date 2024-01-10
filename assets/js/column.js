@@ -1,5 +1,66 @@
+async function columnMove(event) {
+    if (event.target.className !== "column") return;
+
+    const id = event.target.dataset.id;
+    console.log("이동: ", id);
+
+    let prevId = null;
+    let nextId = null;
+
+    const boardDataDiv = document.getElementById("board-data");
+    const columns = boardDataDiv.children;
+
+    let changedColumnIndex = -1;
+
+    for (let idx in columns) {
+        if (idx === "length") break;
+
+        if (columns[idx].getAttribute("data-id") === id) {
+            changedColumnIndex = +idx;
+        }
+    }
+
+    console.log(changedColumnIndex);
+
+    if (changedColumnIndex !== -1 && changedColumnIndex > 0) {
+        prevId = columns[changedColumnIndex - 1].getAttribute("data-id");
+    }
+
+    if (changedColumnIndex !== -1 && changedColumnIndex < columns.length - 1) {
+        nextId = columns[changedColumnIndex + 1].getAttribute("data-id");
+    }
+
+    console.log("prev ", prevId);
+    console.log("next ", nextId);
+
+    let response;
+
+    try {
+        response = await axios.patch(
+            server + `/columns/${id}/move`,
+
+            {
+                prevId,
+                nextId,
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                },
+            },
+        );
+    } catch (e) {
+        response = e.response;
+    }
+
+    console.log(response);
+}
+
 //컴럼 조회
 async function updateBoardData(boardid) {
+    const boardDataDiv_ = document.getElementById("board-data");
+    boardDataDiv_.dataset.id = boardid;
+
     boardDataDiv.innerHTML = ``;
     columnbtn.innerHTML = ``;
     axios
@@ -14,8 +75,8 @@ async function updateBoardData(boardid) {
 
             columns.forEach((column, index) => {
                 boardDataDiv.innerHTML += `
-                <div>
-                    <div draggable="true" class="column">
+                <div data-id="${column.id}" draggable="true" class="column" ondragend="columnMove(event)">
+                    <div>
                         <h3>
                         <div style="display: flex">
                         <div class="dropdown">
