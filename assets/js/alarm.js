@@ -21,6 +21,8 @@ async function alarmDelete(alarmid) {
             },
         })
         .then(function (response) {
+            alert("알람 삭제");
+            window.location.reload();
             //alert("알람이 삭제되었습니다."); //테스트 (실제구현에서는 사용하지 않음)
             // 새로고침을 사용하지 않고 실시간으로 사라지도록 확인하는 방법 고민
         })
