@@ -86,11 +86,11 @@ async function updateCardData(columnid, index) {
 
             cards.cards.forEach((card) => {
                 cardData.innerHTML += `
-                <div data-id=${card.id} draggable="true" style="border-radius: 15px; border: solid 5px ${card.color}; background-color: white;" class="card" ondragend="cardMove(event)">
-                <div class="cardInner">
+                <div data-id=${card.id} draggable="true" style="pointer-events: auto; border-radius: 15px; border: solid 5px ${card.color}; background-color: white;" class="card" ondragend="cardMove(event)">
+                <div class="cardInner unselectable">
                 <div class="dropdown">
-                    <button class="dropbtn"><i class="fas fa-solid fa-bars"></i></button>
-                    <div class="dropdown-content">
+                    <button class="dropbtn" style="pointer-events: auto;"><i class="fas fa-solid fa-bars"></i></button>
+                    <div class="dropdown-content" style="pointer-events: auto;">
                     <a onclick="deleteCard(${card.id})">삭제</a>
                     <a onclick="setTimeout(updateCardform(${card.id}), 0)" data-bs-toggle="modal" data-bs-target="#updateCardModal">수정</a>
                     </div>

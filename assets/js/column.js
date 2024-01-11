@@ -76,9 +76,9 @@ async function updateBoardData(boardid) {
             columns.forEach((column, index) => {
                 boardDataDiv.innerHTML += `
                 <div data-id="${column.id}" draggable="true" class="column" ondragend="columnMove(event)">
-                    <div class="column_">
+                    <div class="column_ unselectable">
                         <h3>
-                        <div class="dropdown">
+                        <div class="dropdown" style="pointer-events: auto;">
                             <button class="dropbtn"><i class="fas fa-solid fa-bars"></i></button>
                             <div class="dropdown-content">
                             <a onclick="deleteColumn(${column.id})">삭제</a>
