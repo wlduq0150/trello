@@ -77,7 +77,7 @@ export class InvitedUsersService {
 
         const token = this.generateAccessToken(user.id, board.id);
 
-        const baseUrl = "http://localhost:5000";
+        const baseUrl = "http://localhost:5001";
 
         const url = `${baseUrl}/invited-users?token=${token.accessToken}`;
 

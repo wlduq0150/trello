@@ -1,0 +1,541 @@
+<!doctype html>
+<html>
+    <head>
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+            crossorigin="anonymous"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+            integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        />
+        <link rel="stylesheet" href="css/trellor.css" />
+    </head>
+
+    <body>
+        <button onclick="logoutform()">Logout</button>
+        <div class="header">
+            <div class="logo">
+                <img src="resources/logo.png" id="logo" />
+            </div>
+            <div class="iconBox">
+                <div id="invited_user">
+                    <div>
+                        <button
+                            id="invite_btn"
+                            type="button"
+                            class="btn"
+                            data-bs-toggle="modal"
+                            data-bs-target="#inviteModal"
+                        >
+                            <i class="fas fa-solid fa-user-plus"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 알람 버튼 -->
+                <div id="alarm_Btn">
+                    <div>
+                        <button
+                            id="alarm_btn"
+                            type="button"
+                            class="btn"
+                            data-bs-toggle="modal"
+                            data-bs-target="#alarmModal"
+                        >
+                            <i class="fas fa-solid fa-bell"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="board-list">
+                <div id="board-list"></div>
+                <!-- <h2>Board List</h2>
+                <div class="board-item">Board 1</div>
+                <div class="board-item">Board 2</div> -->
+                <!-- <div><button id="boardBtn">Add a board...</button></div> -->
+                <div>
+                    <button
+                        onclick="setTimeout(createBoardform, 0)"
+                        id="boardBtn"
+                        data-bs-toggle="modal"
+                        data-bs-target="#createBoardModal"
+                    >
+                        <i class="fas fa-solid fa-plus"></i> Add a board
+                    </button>
+                </div>
+            </div>
+
+            <div draggable="true" class="board-data" id="board-data">
+                <!-- <h2>Board 1</h2>
+                <div class="column">
+                    <h3>Column 1</h3>
+                    <div class="card">Card 1</div>
+                    <div class="card">Card 2</div>
+                    <button>Add a card...</button>
+                </div>
+                <div class="column">
+                    <h3>Column 2</h3>
+                    <div class="card">Card 1</div>
+                    <div class="card">Card 2</div>
+                </div> -->
+            </div>
+            <div id="column_btn"></div>
+        </div>
+
+        <!-- 모달 기능 부분 -->
+        <!-- 유저 초대 모달 -->
+        <div
+            class="modal fade"
+            id="inviteModal"
+            data-bs-backdrop="static"
+            tabindex="-1"
+            data-bs-keyboard="false"
+            aria-labelledby="inviteModal"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">
+                            유저 초대
+                        </h1>
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                        ></button>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">name</th>
+                                    <th scope="col">email</th>
+
+                                    <th scope="col">Button</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersinfo"></tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal"
+                        >
+                            Close
+                        </button>
+                        <button
+                            onclick="inviteUser()"
+                            type="button"
+                            class="btn btn-primary"
+                        >
+                            Search
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 알림 모달 -->
+        <div
+            class="modal fade"
+            id="alarmModal"
+            tabindex="-1"
+            data-bs-keyboard="false"
+            aria-labelledby="alarmModal"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">
+                            알림
+                        </h1>
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                        ></button>
+                    </div>
+                    <div class="modal-body">
+                        <thead>
+                            최신 알람
+                        </thead>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="alarminfo1"></tbody>
+                        </table>
+                    </div>
+                    <div class="modal-body">
+                        <thead>
+                            과거 알람
+                        </thead>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="alarminfo2"></tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal"
+                        >
+                            Close
+                        </button>
+                        <!-- <button
+                            onclick=""
+                            type="button"
+                            class="btn btn-primary"
+                        >
+                            Search
+                        </button> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 보드 생성 모달 -->
+        <div
+            class="modal fade"
+            id="createBoardModal"
+            data-bs-backdrop="static"
+            tabindex="-1"
+            data-bs-keyboard="false"
+            aria-labelledby="createBoardModal"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">
+                            보드 생성
+                        </h1>
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                        ></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="createBoard"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal"
+                        >
+                            Close
+                        </button>
+                        <button
+                            onclick="createBoard()"
+                            type="button"
+                            class="btn btn-primary"
+                        >
+                            Create
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 보드 수정 모달 -->
+        <div
+            class="modal fade"
+            id="updateBoardModal"
+            data-bs-backdrop="static"
+            tabindex="-1"
+            data-bs-keyboard="false"
+            aria-labelledby="updateBoardModal"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">
+                            보드 수정
+                        </h1>
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                        ></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="updateBoard"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 컬럼 수정 모달 -->
+        <div
+            class="modal fade"
+            id="updatetColumnModal"
+            data-bs-backdrop="static"
+            tabindex="-1"
+            data-bs-keyboard="false"
+            aria-labelledby="updatetColumnModal"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">
+                            컬럼 수정
+                        </h1>
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                        ></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="updateCloumn"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 컬럼 생성 모달 -->
+        <div
+            class="modal fade"
+            id="createColumnModal"
+            data-bs-backdrop="static"
+            tabindex="-1"
+            data-bs-keyboard="false"
+            aria-labelledby="createColumnModal"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">
+                            컬럼 생성
+                        </h1>
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                        ></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="createCloumn"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--카드 생성 모달 -->
+        <div
+            class="modal fade"
+            id="createCardModal"
+            data-bs-backdrop="static"
+            tabindex="-1"
+            data-bs-keyboard="false"
+            aria-labelledby="createCardModal"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">
+                            카드 생성
+                        </h1>
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                        ></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="createCard"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--카드 수정 모달 -->
+        <div
+            class="modal fade"
+            id="updateCardModal"
+            data-bs-backdrop="static"
+            tabindex="-1"
+            data-bs-keyboard="false"
+            aria-labelledby="updateCardModal"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">
+                            카드 생성
+                        </h1>
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                        ></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="updateCard"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script
+            src="https://code.jquery.com/jquery-3.5.1.js"
+            integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+            crossorigin="anonymous"
+        ></script>
+
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+            crossorigin="anonymous"
+        ></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script src="../js/constant.js"></script>
+        <script src="../js/trellor.js"></script>
+        <script src="../js/board.js"></script>
+        <script src="../js/card.js"></script>
+        <script src="../js/column.js"></script>
+        <script src="../js/inviteUser.js"></script>
+        <script src="../js/alarm.js"></script>
+
+        <!-- <script>
+            if (localStorage.getItem("accessToken")) {
+                console.log(localStorage.getItem("accessToken"));
+                getSelf(function () {
+                    alert(
+                        "이미 로그인이 되어있습니다. 메인페이지로 이동합니다.",
+                    );
+                    window.location.replace("/index.html");d
+                });
+            }
+        </script> -->
+
+        <script>
+            var dragged;
+
+            /* events fired on the draggable target */
+            document.addEventListener("drag", function (event) {}, false);
+
+            document.addEventListener(
+                "dragstart",
+                function (event) {
+                    // store a reference to the dragged element
+                    dragged = event.target;
+                    // make it half transparent
+                    event.target.style.opacity = 0.5;
+                },
+                false,
+            );
+
+            document.addEventListener(
+                "dragend",
+                function (event) {
+                    // reset the transparency
+                    event.target.style.opacity = "";
+                },
+                false,
+            );
+
+            /* events fired on the drop targets */
+            document.addEventListener(
+                "dragover",
+                function (event) {
+                    // prevent default to allow drop
+                    event.preventDefault();
+                },
+                false,
+            );
+
+            document.addEventListener(
+                "dragenter",
+                function (event) {
+                    // highlight potential drop target when the draggable element enters it
+                    if (
+                        event.target.className == "column" ||
+                        event.target.className == "card"
+                    ) {
+                        event.target.style.background = "purple";
+                    }
+                },
+                false,
+            );
+
+            document.addEventListener(
+                "dragleave",
+                function (event) {
+                    // reset background of potential drop target when the draggable element leaves it
+                    if (
+                        event.target.className == "column" ||
+                        event.target.className == "card"
+                    ) {
+                        event.target.style.background = "";
+                    }
+                },
+                false,
+            );
+
+            document.addEventListener(
+                "drop",
+                function (event) {
+                    // prevent default action (open as link for some elements)
+                    event.preventDefault();
+                    // move dragged element to the location of the drop
+                    if (event.target.className == "column") {
+                        console.log(dragged);
+                        event.target.style.background = "";
+                        dragged.parentNode.removeChild(dragged);
+                        event.target.parentNode.insertBefore(
+                            dragged,
+                            event.target,
+                        );
+                    } else if (event.target.className == "card") {
+                        event.target.style.background = "";
+                        console.log("이동되는것", dragged);
+                        console.log("후후", event.target);
+                        dragged.parentNode.removeChild(dragged);
+                        event.target.parentNode.insertBefore(
+                            dragged,
+                            event.target,
+                        );
+
+                        console.log("이동완료");
+                    }
+                },
+                false,
+            );
+        </script>
+    </body>
+</html>

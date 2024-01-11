@@ -7,9 +7,11 @@ import {
     SwaggerModule,
 } from "@nestjs/swagger";
 import { ConfigService } from "@nestjs/config";
+import { NestExpressApplication } from "@nestjs/platform-express";
+import { join } from "path";
 
 async function bootstrap() {
-    const app = await NestFactory.create(AppModule);
+    const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
     app.enableCors({
         origin: true,
@@ -38,12 +40,12 @@ async function bootstrap() {
         .setVersion("1.0")
         .addTag("Trello")
         .addBearerAuth(
-            { type: 'http', scheme: 'bearer', bearerFormat: 'Token' },
-            'accessToken',
+            { type: "http", scheme: "bearer", bearerFormat: "Token" },
+            "accessToken",
         )
         .addBearerAuth(
-            { type: 'http', scheme: 'bearer', bearerFormat: 'Token' },
-            'refreshToken',
+            { type: "http", scheme: "bearer", bearerFormat: "Token" },
+            "refreshToken",
         )
         .build();
     const document = SwaggerModule.createDocument(app, config);
@@ -52,6 +54,8 @@ async function bootstrap() {
     // 환경 변수 설정
     const configService = app.get(ConfigService);
     const port: number = configService.get("SERVER_PORT");
+
+    app.useStaticAssets(join(__dirname, "..", "assets"));
 
     await app.listen(port);
 }

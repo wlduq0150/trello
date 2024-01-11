@@ -16,6 +16,7 @@ import { ApiBearerAuth } from "@nestjs/swagger";
 import { UserId } from "src/auth/decorators/userId.decorator";
 import { ChangeColumnCardDto } from "./dto/change-column-card.dto";
 import { ChangeUserCardDto } from "./dto/change-user-card.dto";
+import { CardMoveDto } from "./dto/move-card.dto";
 
 @Controller("cards")
 export class CardController {
@@ -49,15 +50,15 @@ export class CardController {
         return this.cardService.remove(+id);
     }
 
-    @ApiBearerAuth("accessToken")
-    @UseGuards(accessTokenGuard)
-    @Patch(":id/move")
-    changeColumn(
-        @Param("id") id: string,
-        @Body() changeColumnCardDtoDto: ChangeColumnCardDto,
-    ) {
-        return this.cardService.changeColumn(+id, changeColumnCardDtoDto);
-    }
+    // @ApiBearerAuth("accessToken")
+    // @UseGuards(accessTokenGuard)
+    // @Patch(":id/move")
+    // changeColumn(
+    //     @Param("id") id: string,
+    //     @Body() changeColumnCardDtoDto: ChangeColumnCardDto,
+    // ) {
+    //     return this.cardService.changeColumn(+id, changeColumnCardDtoDto);
+    // }
 
     @ApiBearerAuth("accessToken")
     @UseGuards(accessTokenGuard)
@@ -67,5 +68,12 @@ export class CardController {
         @Body() changeUserCardDtoDto: ChangeUserCardDto,
     ) {
         return this.cardService.changeUser(+id, changeUserCardDtoDto);
+    }
+
+    @ApiBearerAuth("accessToken")
+    @UseGuards(accessTokenGuard)
+    @Patch(":id/move")
+    cardMove(@Param("id") cardId: number, @Body() cardMoveDto: CardMoveDto) {
+        return this.cardService.cardMove(cardId, cardMoveDto);
     }
 }

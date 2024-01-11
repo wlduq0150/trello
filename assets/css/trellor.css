@@ -1,0 +1,232 @@
+@font-face {
+    font-family: "LINESeedKR-Bd";
+    src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Bd.woff2")
+        format("woff2");
+    font-weight: 700;
+    font-style: normal;
+}
+
+body {
+    /* font-family: Arial, sans-serif; */
+    font-family: "LINESeedKR-Bd";
+    background-color: white;
+    height: 100vh;
+    margin: 0 auto;
+    width: 100vw;
+}
+
+.header {
+    display: grid;
+    grid-template-areas: "logo . iconBox";
+    grid-template-columns: 2fr 7fr 1fr;
+    background-color: #fffaf3;
+    height: 80px;
+    width: 100%;
+    position: fixed;
+}
+
+.logo {
+    grid-area: logo;
+    padding: 15px 20px;
+}
+
+.iconBox {
+    grid-area: iconBox;
+}
+
+#invite_btn,
+#alarm_btn {
+    width: 50px;
+    height: 50px;
+    border: none;
+    background-color: #fffaf3;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+#invite_btn {
+    position: absolute;
+    top: 15px;
+    right: 70px;
+}
+
+#alarm_btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}
+
+.container {
+    display: flex;
+    padding: 100px 10px 0px;
+    margin: 0 auto;
+    width: 100%;
+
+    max-width: 1600px;
+    min-width: 1600px;
+}
+
+.board-list {
+    background-color: #f6f6f7;
+    width: 300px;
+    height: 85vh;
+    margin: 10px;
+    padding: 10px;
+    border: none;
+    border-radius: 15px;
+    overflow-y: auto;
+}
+
+.board-item {
+    background-color: #f4f4f4;
+    margin: 5px 0;
+    padding: 5px;
+}
+.board-data {
+    width: 1100px;
+    height: 85vh;
+    margin: 10px;
+    padding: 10px;
+    background-color: #f6f6f7;
+    border: none;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+}
+
+.column_ {
+    width: 300px;
+    height: 720px;
+    margin: 10px 15px 5px;
+    padding: 15px;
+    border: none;
+    border-radius: 15px;
+    background-color: #fff;
+    overflow-y: auto;
+}
+
+.card {
+    position: relative;
+    display: flex;
+    background-color: #eee;
+    margin: 5px 0;
+    padding: 5px;
+}
+
+.cardInner {
+    display: inline;
+}
+
+#boardBtn {
+    position: relative;
+    left: 140px;
+    width: 135px;
+    background-color: white;
+    border-radius: 5px;
+    border: solid 2px #0a1759;
+    padding: 5px;
+    margin-top: 5px;
+}
+
+#boardBtn i,
+#columnBtn i,
+#cardBtn i {
+    padding-top: 2px;
+}
+
+#columnBtn {
+    position: relative;
+    width: 150px;
+    background-color: white;
+    border-radius: 5px;
+    border: solid 2px #0a1759;
+    padding: 5px;
+    margin-top: 15px;
+}
+
+#cardBtn {
+    position: relative;
+    width: 130px;
+    background-color: white;
+    border-radius: 5px;
+    border: solid 2px #0a1759;
+    padding: 5px;
+    margin-top: 5px;
+    left: 180px;
+}
+
+.dropbtn {
+    border: none;
+    background: none;
+    padding-top: 5px;
+}
+
+/* .titleBox {
+} */
+
+.dropdown {
+    position: relative;
+    display: inline;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    min-width: 160px;
+    z-index: 1;
+    border-radius: 10px;
+    border: solid 2px black;
+    background-color: #f4f4f4;
+    font-size: 1rem;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 7px 16px;
+    text-decoration: none;
+    display: block;
+    cursor: pointer;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* 수정 form 디자인 */
+form {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 15px;
+}
+
+form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+form input[type="text"],
+form textarea,
+form input[type="color"],
+form input[type="date"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+form input[type="submit"] {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+form input[type="submit"]:hover {
+    background-color: #0056b3;
+}
