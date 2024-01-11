@@ -16,7 +16,9 @@
         />
         <link rel="stylesheet" href="css/trellor.css" />
     </head>
+
     <body>
+        <button onclick="logoutform()">Logout</button>
         <div class="header">
             <div class="logo">
                 <img src="resources/logo.png" id="logo" />
@@ -83,7 +85,6 @@
                     <h3>Column 2</h3>
                     <div class="card">Card 1</div>
                     <div class="card">Card 2</div>
-                    
                 </div> -->
             </div>
             <div id="column_btn"></div>
@@ -119,7 +120,7 @@
                                 <tr>
                                     <th scope="col">name</th>
                                     <th scope="col">email</th>
-                                    <th scope="col">boards</th>
+
                                     <th scope="col">Button</th>
                                 </tr>
                             </thead>
@@ -169,16 +170,29 @@
                         ></button>
                     </div>
                     <div class="modal-body">
+                        <thead>
+                            최신 알람
+                        </thead>
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th scope="col">카드 ID</th>
-                                    <th scope="col" style="width: 70%">
-                                        메세지
-                                    </th>
+                                    <th scope="col"></th>
                                 </tr>
                             </thead>
-                            <tbody id="alarminfo"></tbody>
+                            <tbody id="alarminfo1"></tbody>
+                        </table>
+                    </div>
+                    <div class="modal-body">
+                        <thead>
+                            과거 알람
+                        </thead>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="alarminfo2"></tbody>
                         </table>
                     </div>
                     <div class="modal-footer">
@@ -415,6 +429,7 @@
         <script src="../js/card.js"></script>
         <script src="../js/column.js"></script>
         <script src="../js/inviteUser.js"></script>
+        <script src="../js/alarm.js"></script>
 
         <!-- <script>
             if (localStorage.getItem("accessToken")) {
@@ -499,16 +514,24 @@
                     event.preventDefault();
                     // move dragged element to the location of the drop
                     if (event.target.className == "column") {
-                        event.target.style.background = "";
-                        dragged.parentNode.removeChild(dragged);
-                        event.target.appendChild(dragged);
-                    } else if (event.target.className == "card") {
+                        console.log(dragged);
                         event.target.style.background = "";
                         dragged.parentNode.removeChild(dragged);
                         event.target.parentNode.insertBefore(
                             dragged,
                             event.target,
                         );
+                    } else if (event.target.className == "card") {
+                        event.target.style.background = "";
+                        console.log("이동되는것", dragged);
+                        console.log("후후", event.target);
+                        dragged.parentNode.removeChild(dragged);
+                        event.target.parentNode.insertBefore(
+                            dragged,
+                            event.target,
+                        );
+
+                        console.log("이동완료");
                     }
                 },
                 false,

@@ -1,5 +1,66 @@
+async function columnMove(event) {
+    if (event.target.className !== "column") return;
+
+    const id = event.target.dataset.id;
+    console.log("이동: ", id);
+
+    let prevId = null;
+    let nextId = null;
+
+    const boardDataDiv = document.getElementById("board-data");
+    const columns = boardDataDiv.children;
+
+    let changedColumnIndex = -1;
+
+    for (let idx in columns) {
+        if (idx === "length") break;
+
+        if (columns[idx].getAttribute("data-id") === id) {
+            changedColumnIndex = +idx;
+        }
+    }
+
+    console.log(changedColumnIndex);
+
+    if (changedColumnIndex !== -1 && changedColumnIndex > 0) {
+        prevId = columns[changedColumnIndex - 1].getAttribute("data-id");
+    }
+
+    if (changedColumnIndex !== -1 && changedColumnIndex < columns.length - 1) {
+        nextId = columns[changedColumnIndex + 1].getAttribute("data-id");
+    }
+
+    console.log("prev ", prevId);
+    console.log("next ", nextId);
+
+    let response;
+
+    try {
+        response = await axios.patch(
+            server + `/columns/${id}/move`,
+
+            {
+                prevId,
+                nextId,
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                },
+            },
+        );
+    } catch (e) {
+        response = e.response;
+    }
+
+    console.log(response);
+}
+
 //컴럼 조회
 async function updateBoardData(boardid) {
+    const boardDataDiv_ = document.getElementById("board-data");
+    boardDataDiv_.dataset.id = boardid;
+
     boardDataDiv.innerHTML = ``;
     columnbtn.innerHTML = ``;
     axios
@@ -14,10 +75,9 @@ async function updateBoardData(boardid) {
 
             columns.forEach((column, index) => {
                 boardDataDiv.innerHTML += `
-                <div>
-                    <div draggable="true" class="column">
+                <div data-id="${column.id}" draggable="true" class="column" ondragend="columnMove(event)">
+                    <div class="column_">
                         <h3>
-                        <div style="display: flex">
                         <div class="dropdown">
                             <button class="dropbtn"><i class="fas fa-solid fa-bars"></i></button>
                             <div class="dropdown-content">
@@ -31,7 +91,7 @@ async function updateBoardData(boardid) {
                         <div id="card-data-${index}"></div>
                     </div>
                     <div>
-                        <button onclick="setTimeout(createCardform(${column.id}), 0)" id="cardBtn" data-bs-toggle="modal" data-bs-target="#createCardModal">Add a card...</button>
+                        <button onclick="setTimeout(createCardform(${column.id}), 0)" id="cardBtn" data-bs-toggle="modal" data-bs-target="#createCardModal"><i class="fas fa-solid fa-plus"></i> Add a card</button>
                     </div>
                 </div>`;
                 setTimeout(() => {
@@ -40,6 +100,28 @@ async function updateBoardData(boardid) {
             });
             //컬럼 생성 버튼
             columnbtn.innerHTML += `<button onclick="setTimeout(createColumnform(${boardid}), 0)" data-bs-toggle="modal" data-bs-target="#createColumnModal" id="columnBtn"><i class="fas fa-solid fa-plus"></i> Add a Column</button>`;
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}
+
+// 보드색상 변경
+function changeColor(id) {
+    const board_back = document.getElementById("board-data");
+    console.log(id);
+
+    axios
+        .get("/boards/" + id, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+        })
+        .then(function (response) {
+            console.log(response.data.background);
+            boardColor = response.data.background;
+
+            board_back.style.backgroundColor = boardColor;
         })
         .catch(function (error) {
             console.log(error);

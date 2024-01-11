@@ -190,7 +190,7 @@ export class CardService {
         return true;
     }
 
-    @Cron("0 9 * * *")
+    @Cron("40 9 * * *")
     async sendDeadlinAlarm() {
         const today = new Date().getDate();
         const cards = await this.cardRepository.find({
