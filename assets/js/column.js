@@ -108,6 +108,7 @@ async function updateBoardData(boardid) {
 
 // 보드색상 변경
 function changeColor(id) {
+    const board_back = document.getElementById("board-data");
     console.log(id);
 
     axios
