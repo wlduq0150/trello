@@ -2,7 +2,6 @@
 const boardListDiv = document.getElementById("board-list");
 const boardDataDiv = document.getElementById("board-data");
 const columnbtn = document.getElementById("column_btn");
-const boarddata = document.getElementById("board-dataT");
 
 window.onload = function () {
     // const boardBtn = document.getElementById("boardBtn");
@@ -48,7 +47,7 @@ window.onload = function () {
             eventSource.onmessage = (event) => {
                 const data = JSON.parse(event.data);
                 console.log("Received data:", data);
-                subAlarm(data);
+                alarmcheck(data);
             };
 
             // SSE 연결이 열렸을 때
