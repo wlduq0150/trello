@@ -30,15 +30,16 @@ function commentform(id) {
         
     `;
 }
-
-let isFunctionCalled = false;
+let isButtonClicked = {};
 
 function Comments(commentid) {
-    if (isFunctionCalled) {
-        return; // 이미 함수가 호출되었다면 아무것도 실행하지 않고 return
+    if (isButtonClicked[commentid]) {
+        return; // 해당 commentid의 버튼이 이미 클릭되었다면 아무것도 실행하지 않고 return
     }
 
-    isFunctionCalled = true;
+    isButtonClicked[commentid] = true; // 버튼이 클릭되면 해당 commentid의 상태를 true로 설정
+    commentfor_.innerHTML = "";
+
     axios
         .get("/comments/cards/" + commentid + "/comments", {
             headers: {
