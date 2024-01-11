@@ -45,7 +45,7 @@ async function submitForm(event) {
     if (response.status === 201) {
         // Successful signup
         alert("회원가입에 성공하였습니다.");
-        // window.location.href = "index.html";
+        window.location.href = "login.html";
     } else {
         // Failed signup
         alert(response.message);

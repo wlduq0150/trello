@@ -106,6 +106,28 @@ async function updateBoardData(boardid) {
         });
 }
 
+// 보드색상 변경
+function changeColor(id) {
+    const board_back = document.getElementById("board-data");
+    console.log(id);
+
+    axios
+        .get("/boards/" + id, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+        })
+        .then(function (response) {
+            console.log(response.data.background);
+            boardColor = response.data.background;
+
+            board_back.style.backgroundColor = boardColor;
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}
+
 //컬럼 삭제
 async function deleteColumn(columnid) {
     axios
