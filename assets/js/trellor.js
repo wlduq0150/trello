@@ -68,7 +68,7 @@ window.onload = function () {
                         <div class="dropdown">
                             <button class="dropbtn"><i class="fas fa-solid fa-bars"></i></button>
                             <div class="dropdown-content">
-                                <a onclick="deleteColumn()">삭제</a>
+                                <a onclick="deleteBoard(${board.id}})">삭제</a>
                                 <a onclick="setTimeout(updateBoardform(${board.id}), 0)" data-bs-toggle="modal"
                             data-bs-target="#updateBoardModal">수정</a>
                             </div>

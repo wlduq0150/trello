@@ -122,3 +122,21 @@ async function updateBoard(boardid) {
             console.log(error.response.data);
         });
 }
+
+//보드 삭제
+async function deleteBoard(boardid) {
+    axios
+        .delete("/boards/" + boardid, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+        })
+        .then(function (response) {
+            alert("삭제되었습니다.");
+
+            window.location.reload();
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}

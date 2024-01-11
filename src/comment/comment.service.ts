@@ -29,6 +29,7 @@ export class CommentService {
         });
         const comment = await this.commentRepository.find({
             where: { card: card },
+            relations: { user: true },
         });
 
         if (!card) {
@@ -105,7 +106,6 @@ export class CommentService {
     //댓글 삭제
 
     async commentDelete(userid: number, commentid: number) {
-
         const comment = await this.commentRepository.findOne({
             where: { id: commentid },
             relations: { user: true },

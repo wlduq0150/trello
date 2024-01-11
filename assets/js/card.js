@@ -86,7 +86,7 @@ async function updateCardData(columnid, index) {
 
             cards.cards.forEach((card) => {
                 cardData.innerHTML += `
-                <div data-id=${card.id} draggable="true" style="pointer-events: auto; border-radius: 15px; border: solid 5px ${card.color}; background-color: white;" class="card" ondragend="cardMove(event)">
+                <div data-id=${card.id} draggable="true" style="pointer-events: auto; border-radius: 15px; border: solid 5px ${card.color}; background-color: white;" class="card" ondragend="cardMove(event)" data-bs-toggle="modal" data-bs-target="#commentModal" onclick="setTimeout(Comments(${card.id}), 0),setTimeout(commentform(${card.id}), 0)">
                 <div class="cardInner unselectable">
                 <div class="dropdown">
                     <button class="dropbtn" style="pointer-events: auto;"><i class="fas fa-solid fa-bars"></i></button>
