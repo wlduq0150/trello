@@ -35,7 +35,8 @@ body {
 }
 
 #invite_btn,
-#alarm_btn {
+#alarm_btn,
+#logout_btn {
     width: 50px;
     height: 50px;
     border: none;
@@ -54,6 +55,12 @@ body {
     position: absolute;
     top: 15px;
     right: 15px;
+}
+
+#logout_btn {
+    position: absolute;
+    top: 15px;
+    right: 125px;
 }
 
 .container {
