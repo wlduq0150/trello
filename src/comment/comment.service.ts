@@ -39,8 +39,6 @@ export class CommentService {
         //     throw new BadRequestException("댓글이 존재하지 않습니다.");
         // }
 
-        console.log(comment);
-
         return comment;
     }
 
@@ -55,9 +53,6 @@ export class CommentService {
         });
 
         const user = await this.userSerivce.findUserById(userid);
-
-        // console.log(createCommentDto.comment, existCard, user);
-
         if (!existCard) {
             throw new BadRequestException("카드를 확인해주세요");
         }
@@ -82,12 +77,7 @@ export class CommentService {
             where: { id: commentid },
             relations: { user: true },
         });
-
-        console.log(comment.user.id);
-        console.log("-------------");
-
         const user = await this.userSerivce.findUserById(userid);
-        console.log(user.id);
 
         if (comment.user.id !== user.id) {
             throw new BadRequestException("작성자를 확인해주세요.");
@@ -105,7 +95,6 @@ export class CommentService {
     //댓글 삭제
 
     async commentDelete(userid: number, commentid: number) {
-
         const comment = await this.commentRepository.findOne({
             where: { id: commentid },
             relations: { user: true },
@@ -126,7 +115,6 @@ export class CommentService {
 
     async checkComment(userid: number) {
         const test = await this.userSerivce.findUserById(userid);
-        console.log(test);
     }
 
     // async findUser(userid: number) {

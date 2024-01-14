@@ -96,7 +96,6 @@ export class ColumnService {
 
     //칼럼 삭제
     async deleteColumn(id: number) {
-        console.log(id);
         const column = await this.findColumnById(id);
 
         return await this.columnRepository.delete({ id });

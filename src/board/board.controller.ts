@@ -33,7 +33,6 @@ export class BoardController {
     @UseGuards(accessTokenGuard)
     @Get("myboards")
     readMyBoards(@UserId() userId: number) {
-        console.log("id", userId);
         return this.boardService.readMyBoards(+userId);
     }
 
@@ -58,6 +57,6 @@ export class BoardController {
     @UseGuards(accessTokenGuard)
     @Delete("/:id")
     deleteBoard(@Param("id") id: number, @UserId() userId: number) {
-        return this.boardService.deleteBoard(id,userId );
+        return this.boardService.deleteBoard(id, userId);
     }
 }
