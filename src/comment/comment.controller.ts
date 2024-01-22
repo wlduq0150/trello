@@ -19,6 +19,7 @@ export class CommentController {
 
     // @UseGuards(accessTokenGuard)
     // @ApiBearerAuth("accessToken")
+    @UseGuards(accessTokenGuard)
     @Get("cards/:cardid/comments")
     async commentfind(@Param("cardid") cardid: number) {
         return await this.commentService.commentfind(cardid);

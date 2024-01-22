@@ -29,6 +29,7 @@ export class CommentService {
         });
         const comment = await this.commentRepository.find({
             where: { card: card },
+            relations: { user: true },
         });
 
         if (!card) {
